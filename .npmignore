@@ -1,0 +1,61 @@
+# Source files
+packages/*/src/
+**/*.stories.tsx
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Config files
+packages/*/tsconfig.json
+packages/*/tsup.config.ts
+packages/*/.npmignore
+.storybook/
+tsconfig.json
+.eslintrc*
+.prettierrc*
+
+# Development files
+node_modules/
+.DS_Store
+*.log
+.vscode/
+.idea/
+.cursor/
+
+# Documentation (except main README and LICENSE)
+docs/
+BUILD_SUMMARY.md
+CHANGELOG.md
+PUBLISHING.md
+SETUP.md
+STORYBOOK_FIX.md
+TROUBLESHOOTING.md
+USAGE_EXAMPLES.md
+
+# Build artifacts
+*.tsbuildinfo
+
+# Storybook
+storybook-static/
+
+# Tests
+__tests__/
+__mocks__/
+coverage/
+
+# Scripts
+scripts/
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Yarn
+.yarn/
+.yarnrc.yml
+yarn.lock
+
+# Exclude node_modules in packages
+packages/*/node_modules/

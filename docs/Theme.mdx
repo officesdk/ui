@@ -1,0 +1,107 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Theme System" />
+
+# Theme System
+
+Officesdk  UI provides a complete theme system that allows you to easily customize the appearance of components.
+
+## Default Theme
+
+The theme is based on `@officesdk/editor-sdk-core` and includes comprehensive configuration for:
+
+### Colors
+
+The theme includes a rich color palette with various shades and transparency levels:
+
+- Brand colors
+- Semantic colors (red, green, blue, yellow, etc.)
+- Gray scale
+- Transparency levels
+
+### Shadows
+
+Multiple levels of box shadows for different elevation needs.
+
+### Border Radius
+
+Predefined border radius values from none to full rounded.
+
+### Typography
+
+Font family, sizes, weights, and line heights for consistent text styling.
+
+### Components
+
+Each component has its own theme configuration including:
+- State styles (default, hover, active, disabled)
+- Size variants (small, medium, large, extraLarge)
+- Color types (default, guidance, alert)
+
+## Using Theme
+
+### Basic Usage
+
+```tsx
+import { theme } from '@officesdk/ui';
+import { ThemeProvider } from 'styled-components';
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      {/* Your app */}
+    </ThemeProvider>
+  );
+}
+```
+
+### Custom Theme
+
+You can customize the theme by deep merging:
+
+```tsx
+import { theme } from '@officesdk/ui';
+import { deepMerge } from '@officesdk/ui/utils';
+import { ThemeProvider } from 'styled-components';
+
+const customTheme = deepMerge(theme, {
+  colors: {
+    brand: '#ff6b6b',
+  },
+});
+
+function App() {
+  return (
+    <ThemeProvider theme={customTheme}>
+      {/* Your app */}
+    </ThemeProvider>
+  );
+}
+```
+
+## Using Theme in Components
+
+Access theme values in styled-components:
+
+```tsx
+import styled from 'styled-components';
+
+const MyComponent = styled.div`
+  color: ${({ theme }) => theme.colors.brand};
+  padding: ${({ theme }) => theme.typography.fontSize.medium};
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
+  box-shadow: ${({ theme }) => theme.boxShadow.medium};
+`;
+```
+
+## TypeScript Support
+
+The theme system provides complete TypeScript type definitions, giving you full type hints and checking when writing code.
+
+## Theme Modes
+
+The library supports both light and dark themes:
+
+- `lightTheme` - Light mode theme
+- `darkTheme` - Dark mode theme (coming soon)
+- `theme` - Default theme (currently lightTheme)

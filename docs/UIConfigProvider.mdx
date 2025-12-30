@@ -1,0 +1,314 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/UIConfigProvider" />
+
+# UIConfigProvider
+
+## Overview
+
+`UIConfigProvider` is the unified configuration provider for all UI components. It integrates ThemeProvider, IconProvider, ToastContainer, and other global configurations into a single, easy-to-use component.
+
+## Why UIConfigProvider?
+
+### Before (Multiple Providers)
+
+```tsx
+import { ThemeProvider } from 'styled-components';
+import { IconProvider, ToastContainer } from '@officesdk/ui';
+import { lightTheme } from '@officesdk/ui/theme';
+import { iconRegistry } from '@officesdk/ui/icons';
+
+<ThemeProvider theme={lightTheme}>
+  <IconProvider icons={iconRegistry}>
+    <ToastContainer defaultDuration={3000} maxCount={5}>
+      <App />
+    </ToastContainer>
+  </IconProvider>
+</ThemeProvider>
+```
+
+### After (Single Provider)
+
+```tsx
+import { UIConfigProvider, createUIConfig } from '@officesdk/ui';
+import { lightTheme } from '@officesdk/ui/theme';
+import { iconRegistry } from '@officesdk/ui/icons';
+
+const config = createUIConfig({
+  theme: lightTheme,
+  icons: iconRegistry,
+  toast: {
+    defaultDuration: 3000,
+    maxCount: 5,
+  },
+});
+
+<UIConfigProvider config={config}>
+  <App />
+</UIConfigProvider>
+```
+
+## Basic Usage
+
+```tsx
+import { UIConfigProvider, createUIConfig } from '@officesdk/ui';
+import { lightTheme } from '@officesdk/ui/theme';
+
+const config = createUIConfig({
+  theme: lightTheme,
+});
+
+function App() {
+  return (
+    <UIConfigProvider config={config}>
+      {/* Your app components */}
+    </UIConfigProvider>
+  );
+}
+```
+
+## Configuration Options
+
+### Theme (Required)
+
+```tsx
+const config = createUIConfig({
+  theme: lightTheme, // or darkTheme, or custom theme
+});
+```
+
+### Icons (Optional)
+
+```tsx
+import { iconRegistry } from '@officesdk/ui/icons';
+
+const config = createUIConfig({
+  theme: lightTheme,
+  icons: iconRegistry, // Enable icon registry
+});
+```
+
+### Toast Configuration
+
+```tsx
+const config = createUIConfig({
+  theme: lightTheme,
+  toast: {
+    defaultDuration: 3000,  // Auto-close after 3s
+    maxCount: 5,            // Max 5 toasts at once
+    position: 'top-right',  // Toast position
+    offset: {
+      x: 24,                // Offset from edge
+      y: 24,
+    },
+  },
+});
+```
+
+### Internationalization
+
+```tsx
+const config = createUIConfig({
+  theme: lightTheme,
+  locale: 'en-US',
+  i18n: {
+    toast: {
+      closeLabel: 'Close',
+    },
+    button: {
+      loadingText: 'Loading...',
+    },
+    common: {
+      confirm: 'Confirm',
+      cancel: 'Cancel',
+      ok: 'OK',
+    },
+  },
+});
+```
+
+### Z-Index Management
+
+```tsx
+const config = createUIConfig({
+  theme: lightTheme,
+  zIndex: {
+    toast: 9999,
+    modal: 10000,
+    dropdown: 1000,
+    tooltip: 1001,
+  },
+});
+```
+
+### Animation Configuration
+
+```tsx
+const config = createUIConfig({
+  theme: lightTheme,
+  animation: {
+    duration: 200,
+    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    disabled: false, // Set to true to disable all animations
+  },
+});
+```
+
+### Accessibility Configuration
+
+```tsx
+const config = createUIConfig({
+  theme: lightTheme,
+  a11y: {
+    announceMessages: true,
+    focusVisible: true,
+    reduceMotion: false,
+  },
+});
+```
+
+## Using Configuration in Components
+
+### useUIConfig Hook
+
+```tsx
+import { useUIConfig } from '@officesdk/ui';
+
+function MyComponent() {
+  const config = useUIConfig();
+
+  console.log(config.locale);              // 'zh-CN'
+  console.log(config.toast.defaultDuration); // 3000
+  console.log(config.animation.duration);  // 200
+
+  return <div>...</div>;
+}
+```
+
+### useToast Hook
+
+```tsx
+import { useToast } from '@officesdk/ui';
+
+function MyComponent() {
+  const toast = useToast();
+
+  const handleSuccess = () => {
+    toast.success('Operation successful!');
+  };
+
+  const handleError = () => {
+    toast.error('Operation failed');
+  };
+
+  return (
+    <>
+      <button onClick={handleSuccess}>Success</button>
+      <button onClick={handleError}>Error</button>
+    </>
+  );
+}
+```
+
+## Advanced Usage
+
+### Merging Configurations
+
+```tsx
+import { createUIConfig, mergeUIConfig } from '@officesdk/ui';
+import { lightTheme } from '@officesdk/ui/theme';
+
+const baseConfig = createUIConfig({
+  theme: lightTheme,
+  toast: { defaultDuration: 3000 },
+});
+
+const customConfig = mergeUIConfig(baseConfig, {
+  toast: { maxCount: 10 }, // Override maxCount
+  locale: 'en-US',         // Add locale
+});
+
+<UIConfigProvider config={customConfig}>
+  <App />
+</UIConfigProvider>
+```
+
+### Multiple Configurations (Theme Switching)
+
+```tsx
+import { useState } from 'react';
+import { UIConfigProvider, createUIConfig } from '@officesdk/ui';
+import { lightTheme, darkTheme } from '@officesdk/ui/theme';
+
+function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  const config = createUIConfig({
+    theme: isDark ? darkTheme : lightTheme,
+    icons: iconRegistry,
+  });
+
+  return (
+    <UIConfigProvider config={config}>
+      <button onClick={() => setIsDark(!isDark)}>
+        Toggle Theme
+      </button>
+      {/* Your app */}
+    </UIConfigProvider>
+  );
+}
+```
+
+## Benefits
+
+1. **Simplified Setup** - One provider instead of multiple
+2. **Centralized Configuration** - All settings in one place
+3. **Type Safety** - Full TypeScript support
+4. **Default Values** - Sensible defaults for all options
+5. **Easy to Extend** - Add new global configurations easily
+6. **Backward Compatible** - Individual providers still available
+
+## Migration Guide
+
+### From ThemeProvider
+
+**Before:**
+```tsx
+<ThemeProvider theme={lightTheme}>
+  <App />
+</ThemeProvider>
+```
+
+**After:**
+```tsx
+<UIConfigProvider config={{ theme: lightTheme }}>
+  <App />
+</UIConfigProvider>
+```
+
+### From Multiple Providers
+
+**Before:**
+```tsx
+<ThemeProvider theme={lightTheme}>
+  <IconProvider icons={iconRegistry}>
+    <ToastContainer defaultDuration={3000}>
+      <App />
+    </ToastContainer>
+  </IconProvider>
+</ThemeProvider>
+```
+
+**After:**
+```tsx
+const config = createUIConfig({
+  theme: lightTheme,
+  icons: iconRegistry,
+  toast: { defaultDuration: 3000 },
+});
+
+<UIConfigProvider config={config}>
+  <App />
+</UIConfigProvider>
+```
+

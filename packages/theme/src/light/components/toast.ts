@@ -1,0 +1,66 @@
+import { colors } from '../base';
+import { ToastConfig } from '@officesdk/editor-sdk-core/shared';
+
+export const toast: ToastConfig = {
+  padding: '12px 16px',
+  borderRadius: '8px',
+  fontSize: '14px',
+  fontWeight: 500,
+  success: {
+    background: colors.palettes.green['1'],
+    borderColor: colors.palettes.green['2'],
+    icon: {
+      url: '',
+      size: { width: '20px', height: '20px' },
+    },
+    button: {
+      fontSize: '14px',
+      fontWeight: 500,
+      color: colors.palettes.green['6'],
+      gap: '8px',
+    },
+  },
+  info: {
+    background: colors.palettes.blue['1'],
+    borderColor: colors.palettes.blue['2'],
+    icon: {
+      url: '',
+      size: { width: '20px', height: '20px' },
+    },
+    button: {
+      fontSize: '14px',
+      fontWeight: 500,
+      color: colors.palettes.blue['6'],
+      gap: '8px',
+    },
+  },
+  error: {
+    background: colors.palettes.red['1'],
+    borderColor: colors.palettes.red['2'],
+    icon: {
+      url: '',
+      size: { width: '20px', height: '20px' },
+    },
+    button: {
+      fontSize: '14px',
+      fontWeight: 500,
+      color: colors.palettes.red['6'],
+      gap: '8px',
+    },
+  },
+  warn: {
+    background: colors.palettes.yellow['1'],
+    borderColor: colors.palettes.yellow['2'],
+    icon: {
+      url: '',
+      size: { width: '20px', height: '20px' },
+    },
+    button: {
+      fontSize: '14px',
+      fontWeight: 500,
+      color: colors.palettes.yellow['7'],
+      gap: '8px',
+    },
+  },
+};
+

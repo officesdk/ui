@@ -1,0 +1,63 @@
+{
+  "name": "@officesdk/ui-components",
+  "version": "0.1.0",
+  "description": "Officesdk  UI Components",
+  "license": "MIT",
+  "author": "OfficeSdk Team",
+  "homepage": "https://github.com/officesdk/ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/officesdk/ui.git",
+    "directory": "packages/components"
+  },
+  "bugs": {
+    "url": "https://github.com/officesdk/ui/issues"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "officesdk",
+    "design-system"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "rc-tooltip": "^6.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "styled-components": "^5.3.0"
+  },
+  "dependencies": {
+    "@officesdk/ui-theme": "workspace:*",
+    "@officesdk/ui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.11",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}

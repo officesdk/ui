@@ -1,0 +1,160 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Development Guide" />
+
+# Development Guide
+
+This guide will help you understand how to contribute to Officesdk  UI development.
+
+## Project Structure
+
+```
+officesdk-ui/
+├── packages/
+│   ├── components/     # UI Components
+│   ├── theme/          # Theme System
+│   └── utils/          # Utility Functions
+├── docs/               # Documentation
+├── .storybook/         # Storybook Configuration
+└── package.json        # Root Configuration
+```
+
+## Development Environment Setup
+
+### Install Dependencies
+
+```bash
+yarn install
+```
+
+### Start Development Server
+
+```bash
+yarn dev
+```
+
+This will start the Storybook development server. Visit http://localhost:6006 to view components.
+
+### Build
+
+```bash
+yarn build
+```
+
+Build all packages to the `dist` directory.
+
+### Type Check
+
+```bash
+yarn type-check
+```
+
+### Lint Code
+
+```bash
+yarn lint
+```
+
+## Creating a New Component
+
+### 1. Create Component Directory
+
+Create a new component directory under `packages/components/src/`:
+
+```bash
+mkdir packages/components/src/YourComponent
+```
+
+### 2. Create Component Files
+
+Create the following files:
+
+- `YourComponent.tsx` - Component implementation
+- `index.ts` - Export file
+- `YourComponent.stories.tsx` - Storybook stories
+
+### 3. Component Template
+
+```tsx
+// YourComponent.tsx
+import React from 'react';
+import styled from 'styled-components';
+
+export interface YourComponentProps {
+  // Define properties
+}
+
+const StyledComponent = styled.div`
+  // Styles
+`;
+
+export const YourComponent: React.FC<YourComponentProps> = (props) => {
+  return <StyledComponent>{/* Implementation */}</StyledComponent>;
+};
+
+YourComponent.displayName = 'YourComponent';
+```
+
+### 4. Export Component
+
+Export in `packages/components/src/index.ts`:
+
+```tsx
+export { YourComponent } from './YourComponent';
+export type { YourComponentProps } from './YourComponent';
+```
+
+### 5. Write Stories
+
+```tsx
+// YourComponent.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { YourComponent } from './YourComponent';
+
+const meta: Meta<typeof YourComponent> = {
+  title: 'Components/YourComponent',
+  component: YourComponent,
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof YourComponent>;
+
+export const Default: Story = {
+  args: {
+    // Default properties
+  },
+};
+```
+
+## Coding Standards
+
+- Use TypeScript
+- Follow ESLint rules
+- Use functional components and Hooks
+- Provide type definitions for all props
+- Add displayName to components
+- Write clear comments and documentation
+
+## Commit Convention
+
+Use semantic commit messages:
+
+- `feat:` New features
+- `fix:` Bug fixes
+- `docs:` Documentation updates
+- `style:` Code formatting
+- `refactor:` Code refactoring
+- `test:` Test related
+- `chore:` Build/tooling related
+
+## Release Process
+
+1. Update version numbers
+2. Build all packages
+3. Publish to npm
+
+```bash
+yarn build
+npm publish --access public
+```

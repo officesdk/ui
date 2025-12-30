@@ -1,0 +1,66 @@
+import { colors } from '../base';
+import { InputNumberConfig } from '@officesdk/editor-sdk-core/shared';
+
+export const inputNumber: InputNumberConfig = {
+  icons: {
+    increment: '',
+    decrement: '',
+    url: '',
+    size: { width: '12px', height: '12px' },
+    opacity: 0.6,
+    hoverOpacity: 1,
+    disabledOpacity: 0.3,
+  },
+  input: {
+    borderColor: colors.palettes.transparency['10'],
+    borderColorHover: colors.palettes.transparency['20'],
+    borderColorActive: colors.palettes.transparency['30'],
+    borderColorDisabled: colors.palettes.transparency['10'],
+    borderColorError: colors.palettes.red['6'],
+    borderColorReadonly: colors.palettes.transparency['10'],
+    background: colors.palettes.gray['0'],
+    backgroundHover: colors.palettes.gray['0'],
+    backgroundActive: colors.palettes.gray['0'],
+    backgroundDisabled: colors.palettes.gray['5'],
+    backgroundReadonly: colors.palettes.gray['2'],
+    color: colors.palettes.brand,
+    colorDisabled: colors.palettes.transparency['30'],
+  },
+  button: {
+    borderColor: colors.palettes.transparency['10'],
+    borderColorHover: colors.palettes.transparency['20'],
+    borderColorActive: colors.palettes.transparency['30'],
+    borderColorDisabled: colors.palettes.transparency['10'],
+    borderColorError: colors.palettes.red['6'],
+    borderColorReadonly: colors.palettes.transparency['10'],
+    background: colors.palettes.gray['0'],
+    backgroundHover: colors.palettes.transparency['5'],
+    backgroundActive: colors.palettes.transparency['10'],
+    backgroundDisabled: colors.palettes.gray['5'],
+  },
+  small: {
+    button: { width: '28px' },
+    input: {
+      width: '60px',
+      boxShadow: 'none',
+      boxShadowHover: 'none',
+      boxShadowActive: '0 2px 8px 0 rgba(0, 0, 0, 0.04)',
+      boxShadowDisabled: 'none',
+    },
+    height: '28px',
+    borderRadius: '4px',
+  },
+  large: {
+    button: { width: '36px' },
+    input: {
+      width: '80px',
+      boxShadow: 'none',
+      boxShadowHover: 'none',
+      boxShadowActive: '0 2px 8px 0 rgba(0, 0, 0, 0.04)',
+      boxShadowDisabled: 'none',
+    },
+    height: '36px',
+    borderRadius: '4px',
+  },
+};
+

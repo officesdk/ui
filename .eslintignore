@@ -1,0 +1,26 @@
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Dependencies
+node_modules/
+
+# Storybook
+storybook-static/
+
+# Config files
+.yarn/
+.pnp.*
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+
+
+

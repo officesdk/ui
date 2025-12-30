@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Introduction" />
+
+# Officesdk UI
+
+Welcome to Officesdk UI Component Library!
+
+## Introduction
+
+Officesdk SDK UI is a modern UI component library built with React and styled-components. It provides a series of high-quality, reusable components to help you quickly build beautiful user interfaces.
+
+## Features
+
+- 🎨 **Modern Design** - Clean and beautiful design style
+- 🔧 **TypeScript Support** - Full type definitions
+- 💅 **Flexible Styling** - Built with styled-components, easy to customize
+- 📦 **Tree Shaking** - Supports on-demand loading
+- 🎯 **Ready to Use** - Complete default configuration
+- 📖 **Well Documented** - Detailed component documentation and examples
+
+## Tech Stack
+
+- React 18+
+- TypeScript
+- styled-components
+- Storybook
+
+## Quick Start
+
+### Installation
+
+```bash
+yarn add @officesdk/ui styled-components@^5.3.0
+```
+
+Or using npm:
+
+```bash
+npm install @officesdk/ui styled-components@^5.3.0
+```
+
+### Usage
+
+```tsx
+import { Button, UIConfigProvider, createUIConfig } from '@officesdk/ui';
+import { lightTheme } from '@officesdk/ui/theme';
+import { iconRegistry } from '@officesdk/ui/icons';
+
+const config = createUIConfig({
+  theme: lightTheme,
+  icons: iconRegistry,
+});
+
+function App() {
+  return (
+    <UIConfigProvider config={config}>
+      <Button variant="solid" colorType="default">
+        Click Me
+      </Button>
+    </UIConfigProvider>
+  );
+}
+```
+
+## Browse Components
+
+Select the component you want to view from the left navigation bar. Each component includes:
+
+- Interactive examples
+- Property documentation
+- Usage guidelines
+
+Start exploring!

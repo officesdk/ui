@@ -1,0 +1,52 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "no-irregular-whitespace": ["error", {
+      "skipStrings": false,
+      "skipComments": false,
+      "skipRegExps": false,
+      "skipTemplates": false
+    }],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Literal[value=/[\\u4e00-\\u9fa5]/]",
+        "message": "Chinese characters are not allowed in code. Please use English for all text content."
+      },
+      {
+        "selector": "TemplateElement[value.raw=/[\\u4e00-\\u9fa5]/]",
+        "message": "Chinese characters are not allowed in template literals. Please use English for all text content."
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  }
+}
+
