@@ -9,10 +9,11 @@ node_modules
 !.yarn/versions
 
 # Build outputs
-*/dist
-build
+dist/
+*/dist/
+build/
 *.tsbuildinfo
-storybook-static
+storybook-static/
 
 # Logs
 *.log
