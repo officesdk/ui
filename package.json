@@ -1,7 +1,8 @@
 {
-  "name": "@officesdk/ui",
+  "name": "officesdk-ui-monorepo",
   "version": "0.1.0",
-  "description": "OfficeSdk SDK UI Component Library",
+  "private": true,
+  "description": "OfficeSdk SDK UI Component Library - Monorepo",
   "license": "MIT",
   "author": "OfficeSdk Team",
   "homepage": "https://github.com/officesdk/ui#readme",
@@ -12,46 +13,9 @@
     "type": "git",
     "url": "https://github.com/officesdk/ui.git"
   },
-  "main": "./packages/components/dist/index.js",
-  "module": "./packages/components/dist/index.mjs",
-  "types": "./packages/components/dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./packages/components/dist/index.d.ts",
-      "import": "./packages/components/dist/index.mjs",
-      "require": "./packages/components/dist/index.js"
-    },
-    "./theme": {
-      "types": "./packages/theme/dist/index.d.ts",
-      "import": "./packages/theme/dist/index.mjs",
-      "require": "./packages/theme/dist/index.js"
-    },
-    "./utils": {
-      "types": "./packages/utils/dist/index.d.ts",
-      "import": "./packages/utils/dist/index.mjs",
-      "require": "./packages/utils/dist/index.js"
-    },
-    "./icons": {
-      "types": "./packages/icons/dist/index.d.ts",
-      "import": "./packages/icons/dist/index.mjs",
-      "require": "./packages/icons/dist/index.js"
-    }
-  },
-  "files": [
-    "packages/components/dist",
-    "packages/theme/dist",
-    "packages/utils/dist",
-    "packages/icons/dist",
-    "packages/*/package.json",
-    "packages/*/README.md",
-    "LICENSE"
-  ],
   "workspaces": [
     "packages/*"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",

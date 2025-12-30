@@ -1,0 +1,77 @@
+{
+  "name": "@officesdk/ui",
+  "version": "0.1.0",
+  "description": "OfficeSdk SDK UI Component Library",
+  "license": "MIT",
+  "author": "OfficeSdk Team",
+  "homepage": "https://github.com/officesdk/ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/officesdk/ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/officesdk/ui/issues"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "officesdk",
+    "design-system",
+    "styled-components"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "../theme/dist/index.d.ts",
+      "import": "../theme/dist/index.mjs",
+      "require": "../theme/dist/index.js"
+    },
+    "./utils": {
+      "types": "../utils/dist/index.d.ts",
+      "import": "../utils/dist/index.mjs",
+      "require": "../utils/dist/index.js"
+    },
+    "./icons": {
+      "types": "../icons/dist/index.d.ts",
+      "import": "../icons/dist/index.mjs",
+      "require": "../icons/dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "../components/dist",
+    "../theme/dist",
+    "../utils/dist",
+    "../icons/dist",
+    "../*/package.json",
+    "../*/README.md",
+    "../../LICENSE"
+  ],
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "styled-components": "^5.3.0"
+  },
+  "dependencies": {
+    "@officesdk/ui-components": "workspace:*",
+    "@officesdk/ui-icons": "workspace:*",
+    "@officesdk/ui-theme": "workspace:*",
+    "@officesdk/ui-utils": "workspace:*"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "clean": "rm -rf dist"
+  }
+}

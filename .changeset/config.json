@@ -7,10 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "@officesdk/ui-components",
-    "@officesdk/ui-theme",
-    "@officesdk/ui-utils",
-    "@officesdk/ui-icons"
-  ]
+  "ignore": []
 }
