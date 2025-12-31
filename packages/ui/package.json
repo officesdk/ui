@@ -34,30 +34,24 @@
       "require": "./dist/index.js"
     },
     "./theme": {
-      "types": "../theme/dist/index.d.ts",
-      "import": "../theme/dist/index.mjs",
-      "require": "../theme/dist/index.js"
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.mjs",
+      "require": "./dist/theme/index.js"
     },
     "./utils": {
-      "types": "../utils/dist/index.d.ts",
-      "import": "../utils/dist/index.mjs",
-      "require": "../utils/dist/index.js"
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.mjs",
+      "require": "./dist/utils/index.js"
     },
     "./icons": {
-      "types": "../icons/dist/index.d.ts",
-      "import": "../icons/dist/index.mjs",
-      "require": "../icons/dist/index.js"
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.mjs",
+      "require": "./dist/icons/index.js"
     }
   },
   "files": [
     "dist",
-    "../components/dist",
-    "../theme/dist",
-    "../utils/dist",
-    "../icons/dist",
-    "../*/package.json",
-    "../*/README.md",
-    "../../LICENSE"
+    "README.md"
   ],
   "peerDependencies": {
     "react": ">=18.0.0",
