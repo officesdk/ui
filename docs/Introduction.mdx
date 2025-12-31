@@ -40,6 +40,28 @@ Or using npm:
 npm install @officesdk/ui
 ```
 
+### TypeScript Configuration
+
+For better type resolution, add the following paths to your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@officesdk/ui/theme": ["./node_modules/@officesdk/ui/dist/theme/index.d.ts"],
+      "@officesdk/ui/utils": ["./node_modules/@officesdk/ui/dist/utils/index.d.ts"],
+      "@officesdk/ui/icons": ["./node_modules/@officesdk/ui/dist/icons/index.d.ts"],
+      "@officesdk/editor-sdk-core/shared": [
+        "./node_modules/@officesdk/editor-sdk-core/types/shared.d.ts"
+      ]
+    }
+  }
+}
+```
+
+Note: This configuration is optional but recommended for optimal TypeScript IntelliSense support.
+
 ### Usage
 
 ```tsx
