@@ -49,6 +49,22 @@
       "require": "./dist/icons/index.js"
     }
   },
+  "typesVersions": {
+    "*": {
+      "components": [
+        "./dist/components/index.d.ts"
+      ],
+      "theme": [
+        "./dist/theme/index.d.ts"
+      ],
+      "utils": [
+        "./dist/utils/index.d.ts"
+      ],
+      "icons": [
+        "./dist/icons/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist",
     "README.md"
