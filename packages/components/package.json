@@ -43,7 +43,7 @@
     "rc-tooltip": "^6.0.0",
     "react": ">=16.9.0",
     "react-dom": ">=16.9.0",
-    "styled-components": "^5.3.0"
+    "styled-components": ">=5.2.0"
   },
   "dependencies": {
     "@officesdk/design-theme": "workspace:*",
