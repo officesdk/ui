@@ -3,7 +3,7 @@ import RcTooltip from 'rc-tooltip';
 import type { TooltipProps as RcTooltipProps } from 'rc-tooltip/lib/Tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
 
-export interface TooltipProps extends RcTooltipProps {
+export interface TooltipProps extends Partial<RcTooltipProps> {
   /**
    * Tooltip content
    */
