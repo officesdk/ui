@@ -1,8 +1,10 @@
-import {  createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
+import { getGlobalTheme } from '../utils/context';
 
+const theme = getGlobalTheme()
 
 const paddingDistance = '5px';
-const positionDistance = '0'
+const positionDistance = '0';
 
 // Tooltip global styles - includes base styles and all variant/size combinations
 export const TooltipGlobalStyles = createGlobalStyle`
@@ -111,16 +113,16 @@ export const TooltipGlobalStyles = createGlobalStyle`
 
   /* Black variant */
   .tooltip-variant-black .rc-tooltip-inner {
-    background: ${({ theme }) => theme.components.tooltip.black.background};
-    border: 1px solid ${({ theme }) => theme.components.tooltip.black.borderColor};
-    color: ${({ theme }) => theme.components.tooltip.black.color};
-    border-radius: ${({ theme }) => theme.components.tooltip.black.borderRadius};
-    padding: ${({ theme }) => theme.components.tooltip.black.padding};
-    box-shadow: ${({ theme }) => theme.components.tooltip.black.boxShadow};
-    font-size: ${({ theme }) => theme.components.tooltip.black.fontSize};
-    line-height: ${({ theme }) => theme.components.tooltip.black.lineHeight};
-    font-weight: ${({ theme }) => theme.components.tooltip.black.fontWeight};
-    max-width: ${({ theme }) => theme.components.tooltip.black.maxWidth};
+    background: ${() => theme.components.tooltip.black.background};
+    border: 1px solid ${() => theme.components.tooltip.black.borderColor};
+    color: ${() => theme.components.tooltip.black.color};
+    border-radius: ${() => theme.components.tooltip.black.borderRadius};
+    padding: ${() => theme.components.tooltip.black.padding};
+    box-shadow: ${() => theme.components.tooltip.black.boxShadow};
+    font-size: ${() => theme.components.tooltip.black.fontSize};
+    line-height: ${() => theme.components.tooltip.black.lineHeight};
+    font-weight: ${() => theme.components.tooltip.black.fontWeight};
+    max-width: ${() => theme.components.tooltip.black.maxWidth};
     text-align: left;
     text-decoration: none;
   }
@@ -131,7 +133,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     bottom: ${positionDistance};
     margin-left: -5px;
     border-width: 5px 5px 0;
-    border-top-color: ${({ theme }) => theme.components.tooltip.black.background};
+    border-top-color: ${() => theme.components.tooltip.black.background};
   }
 
   .tooltip-variant-black.rc-tooltip-placement-right .rc-tooltip-arrow,
@@ -140,7 +142,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     left: ${positionDistance};
     margin-top: -5px;
     border-width: 5px 5px 5px 0;
-    border-right-color: ${({ theme }) => theme.components.tooltip.black.background};
+    border-right-color: ${() => theme.components.tooltip.black.background};
   }
 
   .tooltip-variant-black.rc-tooltip-placement-left .rc-tooltip-arrow,
@@ -149,7 +151,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     right: ${positionDistance};
     margin-top: -5px;
     border-width: 5px 0 5px 5px;
-    border-left-color: ${({ theme }) => theme.components.tooltip.black.background};
+    border-left-color: ${() => theme.components.tooltip.black.background};
   }
 
   .tooltip-variant-black.rc-tooltip-placement-bottom .rc-tooltip-arrow,
@@ -158,20 +160,20 @@ export const TooltipGlobalStyles = createGlobalStyle`
     top: ${positionDistance};
     margin-left: -5px;
     border-width: 0 5px 5px;
-    border-bottom-color: ${({ theme }) => theme.components.tooltip.black.background};
+    border-bottom-color: ${() => theme.components.tooltip.black.background};
   }
 
   /* White variant - small size */
   .tooltip-variant-white.tooltip-size-small .rc-tooltip-inner {
-    background: ${({ theme }) => theme.components.tooltip.white.small.background};
-    border: 1px solid ${({ theme }) => theme.components.tooltip.white.small.borderColor};
-    color: ${({ theme }) => theme.components.tooltip.white.small.color};
-    border-radius: ${({ theme }) => theme.components.tooltip.white.small.borderRadius};
-    padding: ${({ theme }) => theme.components.tooltip.white.small.padding};
-    box-shadow: ${({ theme }) => theme.components.tooltip.white.small.boxShadow};
-    font-size: ${({ theme }) => theme.components.tooltip.white.small.fontSize};
-    line-height: ${({ theme }) => theme.components.tooltip.white.small.lineHeight};
-    font-weight: ${({ theme }) => theme.components.tooltip.white.small.fontWeight};
+    background: ${() => theme.components.tooltip.white.small.background};
+    border: 1px solid ${() => theme.components.tooltip.white.small.borderColor};
+    color: ${() => theme.components.tooltip.white.small.color};
+    border-radius: ${() => theme.components.tooltip.white.small.borderRadius};
+    padding: ${() => theme.components.tooltip.white.small.padding};
+    box-shadow: ${() => theme.components.tooltip.white.small.boxShadow};
+    font-size: ${() => theme.components.tooltip.white.small.fontSize};
+    line-height: ${() => theme.components.tooltip.white.small.lineHeight};
+    font-weight: ${() => theme.components.tooltip.white.small.fontWeight};
     text-align: left;
     text-decoration: none;
   }
@@ -182,7 +184,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     bottom: ${positionDistance};
     margin-left: -5px;
     border-width: 5px 5px 0;
-    border-top-color: ${({ theme }) => theme.components.tooltip.white.small.background};
+    border-top-color: ${() => theme.components.tooltip.white.small.background};
   }
 
   .tooltip-variant-white.tooltip-size-small.rc-tooltip-placement-right .rc-tooltip-arrow,
@@ -191,7 +193,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     left: ${positionDistance};
     margin-top: -5px;
     border-width: 5px 5px 5px 0;
-    border-right-color: ${({ theme }) => theme.components.tooltip.white.small.background};
+    border-right-color: ${() => theme.components.tooltip.white.small.background};
   }
 
   .tooltip-variant-white.tooltip-size-small.rc-tooltip-placement-left .rc-tooltip-arrow,
@@ -200,7 +202,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     right: ${positionDistance};
     margin-top: -5px;
     border-width: 5px 0 5px 5px;
-    border-left-color: ${({ theme }) => theme.components.tooltip.white.small.background};
+    border-left-color: ${() => theme.components.tooltip.white.small.background};
   }
 
   .tooltip-variant-white.tooltip-size-small.rc-tooltip-placement-bottom .rc-tooltip-arrow,
@@ -209,20 +211,20 @@ export const TooltipGlobalStyles = createGlobalStyle`
     top: ${positionDistance};
     margin-left: -5px;
     border-width: 0 5px 5px;
-    border-bottom-color: ${({ theme }) => theme.components.tooltip.white.small.background};
+    border-bottom-color: ${() => theme.components.tooltip.white.small.background};
   }
 
   /* White variant - large size */
   .tooltip-variant-white.tooltip-size-large .rc-tooltip-inner {
-    background: ${({ theme }) => theme.components.tooltip.white.large.background};
-    border: 1px solid ${({ theme }) => theme.components.tooltip.white.large.borderColor};
-    color: ${({ theme }) => theme.components.tooltip.white.large.color};
-    border-radius: ${({ theme }) => theme.components.tooltip.white.large.borderRadius};
-    padding: ${({ theme }) => theme.components.tooltip.white.large.padding};
-    box-shadow: ${({ theme }) => theme.components.tooltip.white.large.boxShadow};
-    font-size: ${({ theme }) => theme.components.tooltip.white.large.fontSize};
-    line-height: ${({ theme }) => theme.components.tooltip.white.large.lineHeight};
-    font-weight: ${({ theme }) => theme.components.tooltip.white.large.fontWeight};
+    background: ${() => theme.components.tooltip.white.large.background};
+    border: 1px solid ${() => theme.components.tooltip.white.large.borderColor};
+    color: ${() => theme.components.tooltip.white.large.color};
+    border-radius: ${() => theme.components.tooltip.white.large.borderRadius};
+    padding: ${() => theme.components.tooltip.white.large.padding};
+    box-shadow: ${() => theme.components.tooltip.white.large.boxShadow};
+    font-size: ${() => theme.components.tooltip.white.large.fontSize};
+    line-height: ${() => theme.components.tooltip.white.large.lineHeight};
+    font-weight: ${() => theme.components.tooltip.white.large.fontWeight};
     text-align: left;
     text-decoration: none;
   }
@@ -233,7 +235,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     bottom: ${positionDistance};
     margin-left: -5px;
     border-width: 5px 5px 0;
-    border-top-color: ${({ theme }) => theme.components.tooltip.white.large.background};
+    border-top-color: ${() => theme.components.tooltip.white.large.background};
   }
 
   .tooltip-variant-white.tooltip-size-large.rc-tooltip-placement-right .rc-tooltip-arrow,
@@ -242,7 +244,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     left: ${positionDistance};
     margin-top: -5px;
     border-width: 5px 5px 5px 0;
-    border-right-color: ${({ theme }) => theme.components.tooltip.white.large.background};
+    border-right-color: ${() => theme.components.tooltip.white.large.background};
   }
 
   .tooltip-variant-white.tooltip-size-large.rc-tooltip-placement-left .rc-tooltip-arrow,
@@ -251,7 +253,7 @@ export const TooltipGlobalStyles = createGlobalStyle`
     right: ${positionDistance};
     margin-top: -5px;
     border-width: 5px 0 5px 5px;
-    border-left-color: ${({ theme }) => theme.components.tooltip.white.large.background};
+    border-left-color: ${() => theme.components.tooltip.white.large.background};
   }
 
   .tooltip-variant-white.tooltip-size-large.rc-tooltip-placement-bottom .rc-tooltip-arrow,
@@ -260,6 +262,6 @@ export const TooltipGlobalStyles = createGlobalStyle`
     top: ${positionDistance};
     margin-left: -5px;
     border-width: 0 5px 5px;
-    border-bottom-color: ${({ theme }) => theme.components.tooltip.white.large.background};
+    border-bottom-color: ${() => theme.components.tooltip.white.large.background};
   }
 `;

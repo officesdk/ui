@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react';
-import styled from 'styled-components';
+import { styled } from '../utils/styled';
 import { Input, InputProps } from './Input';
 
 export interface SearchInputProps extends Omit<InputProps, 'size' | 'prefixNode'> {

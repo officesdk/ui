@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import styled from 'styled-components';
+import { styled } from '../utils/styled';
 import { Toast, ToastProps } from './Toast';
 
 interface ToastItem extends Omit<ToastProps, 'onClose'> {

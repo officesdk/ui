@@ -1,11 +1,13 @@
 import React, { createContext, useContext } from 'react';
-import { ThemeProvider,  } from 'styled-components';
 import { IconProvider } from '../Icon/IconProvider';
 import { ToastContainer } from '../Toast/ToastContainer';
 import type { UIConfig } from './types';
 import { TooltipGlobalStyles } from '../Tooltip';
+import { registerGlobalContext } from '../utils/context';
 
 const UIConfigContext = createContext<UIConfig | null>(null);
+
+
 
 export interface UIConfigProviderProps {
   /**
@@ -40,38 +42,28 @@ export interface UIConfigProviderProps {
  *   <App />
  * </UIConfigProvider>
  */
-export const UIConfigProvider: React.FC<UIConfigProviderProps> = ({
-  config,
-  children,
-}) => {
-  const {
-    theme,
-    icons = {},
-    toast = {},
-  } = config;
+export const UIConfigProvider: React.FC<UIConfigProviderProps> = ({ config, children }) => {
+  registerGlobalContext({theme: config.theme});
+  const { icons = {}, toast = {} } = config;
 
   const toastConfig = {
     maxCount: toast.maxCount ?? 5,
     defaultDuration: toast.defaultDuration ?? 3000,
   };
 
-  const Provider = ThemeProvider as any;
-
   const TooltipStyles = TooltipGlobalStyles as any;
 
   return (
     <UIConfigContext.Provider value={config}>
-      <Provider theme={theme}>
-        <TooltipStyles />
-        <IconProvider icons={icons}>
-          <ToastContainer
-            maxCount={toastConfig.maxCount}
-            defaultDuration={toastConfig.defaultDuration}
-          >
-            {children}
-          </ToastContainer>
-        </IconProvider>
-      </Provider>
+      <TooltipStyles />
+      <IconProvider icons={icons}>
+        <ToastContainer
+          maxCount={toastConfig.maxCount}
+          defaultDuration={toastConfig.defaultDuration}
+        >
+          {children}
+        </ToastContainer>
+      </IconProvider>
     </UIConfigContext.Provider>
   );
 };
@@ -93,4 +85,3 @@ export const useUIConfig = () => {
 };
 
 UIConfigProvider.displayName = 'UIConfigProvider';
-

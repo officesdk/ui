@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import { styled } from '../utils/styled';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -145,11 +145,16 @@ const StyledButton = styled.button<{
 
     // Validate colorType for variant
     if (colorType === 'status' && variant !== 'text') {
-      console.warn(`colorType 'status' is only available for 'text' variant. Falling back to 'default'.`);
+      console.warn(
+        `colorType 'status' is only available for 'text' variant. Falling back to 'default'.`
+      );
     }
 
-    const effectiveColorType = (colorType === 'status' && variant !== 'text') ? 'default' : colorType;
-    const styles = theme.components.button[variant][effectiveColorType as keyof typeof theme.components.button[typeof variant]];
+    const effectiveColorType = colorType === 'status' && variant !== 'text' ? 'default' : colorType;
+    const styles =
+      theme.components.button[variant][
+        effectiveColorType as keyof (typeof theme.components.button)[typeof variant]
+      ];
 
     return `
       background: ${styles.background};
@@ -252,4 +257,3 @@ export const Button: React.FC<ButtonProps> = ({
 };
 
 Button.displayName = 'Button';
-
