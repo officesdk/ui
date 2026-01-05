@@ -36,11 +36,6 @@ export default defineConfig([
     treeshake: true,
     splitting: false,
     minify: false,
-    outExtension() {
-      return {
-        js: '.mjs',
-      };
-    },
   },
 ]);
 

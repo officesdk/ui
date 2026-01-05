@@ -25,27 +25,27 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.mjs",
+  "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/esm/index.d.ts",
-      "import": "./dist/esm/index.mjs",
+      "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
     "./theme": {
       "types": "./dist/esm/theme/index.d.ts",
-      "import": "./dist/esm/theme/index.mjs",
+      "import": "./dist/esm/theme/index.js",
       "require": "./dist/cjs/theme/index.js"
     },
     "./utils": {
       "types": "./dist/esm/utils/index.d.ts",
-      "import": "./dist/esm/utils/index.mjs",
+      "import": "./dist/esm/utils/index.js",
       "require": "./dist/cjs/utils/index.js"
     },
     "./icons": {
       "types": "./dist/esm/icons/index.d.ts",
-      "import": "./dist/esm/icons/index.mjs",
+      "import": "./dist/esm/icons/index.js",
       "require": "./dist/cjs/icons/index.js"
     }
   },
