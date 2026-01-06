@@ -31,6 +31,18 @@ const meta: Meta<typeof Toast> = {
       control: 'text',
       description: 'Secondary action button text (gray)',
     },
+    onMainButtonClick: {
+      action: 'onMainButtonClick',
+      description: 'Main action button click handler',
+    },
+    onSecondaryButtonClick: {
+      action: 'onSecondaryButtonClick',
+      description: 'Secondary action button click handler',
+    },
+    onClose: {
+      action: 'onClose',
+      description: 'Close button click handler',
+    },
     closable: {
       control: 'boolean',
       description: 'Whether to show close button',
@@ -82,10 +94,10 @@ export const Warn: Story = {
 export const SingleLineWithButtons: Story = {
   args: {
     variant: 'success',
-    message: '信息反馈',
-    mainButtonText: '按钮名称',
+    message: 'Feedback information',
+    mainButtonText: 'Button name',
     onMainButtonClick: () => alert('Main button clicked!'),
-    secondaryButtonText: '按钮名称',
+    secondaryButtonText: 'Button name',
     onSecondaryButtonClick: () => alert('Secondary button clicked!'),
     closable: true,
   },
@@ -104,11 +116,11 @@ export const Closable: Story = {
 export const MultiLineWithDescription: Story = {
   args: {
     variant: 'success',
-    message: '信息反馈',
-    description: '信息具体说明',
-    mainButtonText: '按钮名称',
+    message: 'Feedback information',
+    description: 'Information specific description',
+    mainButtonText: 'Button name',
     onMainButtonClick: () => alert('Main button clicked!'),
-    secondaryButtonText: '按钮名称',
+    secondaryButtonText: 'Button name',
     onSecondaryButtonClick: () => alert('Secondary button clicked!'),
     closable: true,
   },
@@ -174,14 +186,14 @@ export const AllVariantsShowcase: Story = {
       <Toast
         variant="success"
         message="File uploaded successfully"
-        actionText="View"
-        onAction={() => console.log('View clicked')}
+        mainButtonText="View"
+        onMainButtonClick={() => console.log('View clicked')}
       />
       <Toast
         variant="info"
         message="New update available"
-        actionText="Update"
-        onAction={() => console.log('Update clicked')}
+        mainButtonText="Update"
+        onMainButtonClick={() => console.log('Update clicked')}
       />
 
       <h3 style={{ marginTop: '24px', marginBottom: '8px', fontSize: '16px', fontWeight: 600 }}>
@@ -204,8 +216,8 @@ export const AllVariantsShowcase: Story = {
       <Toast
         variant="error"
         message="Failed to save changes"
-        actionText="Retry"
-        onAction={() => console.log('Retry clicked')}
+        mainButtonText="Retry"
+        onMainButtonClick={() => console.log('Retry clicked')}
         closable
       />
 

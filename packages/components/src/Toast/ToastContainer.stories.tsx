@@ -25,7 +25,7 @@ const ToastDemo = () => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <button
-          onClick={() => toast.success('Operation completed successfully!')}
+          onClick={() => toast.success('Operation completed successfully!', {duration: 3000})}
           style={{
             padding: '10px 16px',
             background: '#4ea44b',
@@ -90,8 +90,8 @@ const ToastDemo = () => {
 
         <button
           onClick={() => toast.info('New update available', {
-            actionText: 'Update',
-            onAction: () => alert('Update clicked!'),
+            mainButtonText: 'Update',
+            onMainButtonClick: () => alert('Update clicked!'),
             closable: true,
           })}
           style={{
@@ -148,8 +148,8 @@ const MyComponent = () => {
 
     // With options
     toast.info('Update available', {
-      actionText: 'Update',
-      onAction: () => console.log('Update'),
+      mainButtonText: 'Update',
+      onMainButtonClick: () => console.log('Update'),
       closable: true,
       duration: 5000,
     });
@@ -224,6 +224,63 @@ export const MultipleToasts: Story = {
       <ToastContainer>
         <DemoComponent />
       </ToastContainer>
+    );
+  },
+};
+
+// Placement examples
+export const Placement: Story = {
+  render: () => {
+    const placements: Array<'top-right' | 'top-left' | 'top-center' | 'bottom-right' | 'bottom-left' | 'bottom-center'> = [
+      'top-right',
+      'top-left',
+      'top-center',
+      'bottom-right',
+      'bottom-left',
+      'bottom-center',
+    ];
+
+    return (
+      <div style={{ padding: '40px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '24px' }}>
+          Toast Placement Options
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+          {placements.map((placement) => {
+            const DemoComponent = () => {
+              const toast = useToast();
+              return (
+                <div style={{ padding: '20px', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>
+                    {placement}
+                  </h3>
+                  <button
+                    onClick={() => toast.info(`Toast positioned at ${placement}`)}
+                    style={{
+                      padding: '8px 16px',
+                      background: '#5ba0e7',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                    }}
+                  >
+                    Show Toast
+                  </button>
+                </div>
+              );
+            };
+
+            return (
+              <ToastContainer key={placement} placement={placement}>
+                <DemoComponent />
+              </ToastContainer>
+            );
+          })}
+        </div>
+      </div>
     );
   },
 };

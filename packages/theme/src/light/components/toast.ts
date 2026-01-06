@@ -6,6 +6,10 @@ export const toast: ToastConfig = {
   borderRadius: '8px',
   fontSize: '14px',
   fontWeight: 500,
+  offset: {
+    vertical: '24px',
+    horizontal: '24px',
+  },
   success: {
     background: colors.palettes.green['1'],
     borderColor: colors.palettes.green['2'],

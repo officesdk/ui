@@ -22,8 +22,8 @@ export type { NumberInputProps } from './NumberInput';
 export { Icon, IconProvider, useIconRegistry } from './Icon';
 export type { IconProps, IconProviderProps, IconRegistry, IconComponent } from './Icon';
 
-export { Toast, ToastContainer, useToast } from './Toast';
-export type { ToastProps, ToastContainerProps } from './Toast';
+export { Toast, ToastContainer, useToast, toast } from './Toast';
+export type { ToastProps, ToastContainerProps, ToastContainerConfig } from './Toast';
 
 export { Tabs } from './Tabs';
 export type { TabsProps, TabItem } from './Tabs';

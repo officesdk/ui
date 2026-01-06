@@ -100,8 +100,7 @@ const IconWrapper = styled.div<{
   justify-content: center;
   flex-shrink: 0;
 
-  ${({ $variant, $hasDescription, theme }) => {
-    const iconConfig = theme.components.toast[$variant].icon;
+  ${({ $hasDescription }) => {
     const size = $hasDescription ? '28px' : '18px';
     return `
       width: ${size};
@@ -134,29 +133,6 @@ const ActionGroup = styled.div`
   display: flex;
   gap: 2px;
   align-items: center;
-`;
-
-const CloseButton = styled.button`
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.colors.palettes.gray['60']};
-  flex-shrink: 0;
-  outline: none;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.palettes.gray['100']};
-  }
-
-  &:active {
-    color: ${({ theme }) => theme.colors.palettes.gray['120']};
-  }
 `;
 
 // Default icons for each variant

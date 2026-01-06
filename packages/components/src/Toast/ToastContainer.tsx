@@ -6,6 +6,8 @@ interface ToastItem extends Omit<ToastProps, 'onClose'> {
   id: string;
 }
 
+
+
 interface ToastContextValue {
   showToast: (props: Omit<ToastProps, 'onClose'>) => string;
   hideToast: (id: string) => void;
@@ -17,10 +19,12 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
-const ToastWrapper = styled.div`
+interface ToastWrapperProps {
+  $placement: 'top-right' | 'top-left' | 'top-center' | 'bottom-right' | 'bottom-left' | 'bottom-center';
+}
+
+const ToastWrapper = styled.div<ToastWrapperProps>`
   position: fixed;
-  top: 24px;
-  right: 24px;
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -30,9 +34,47 @@ const ToastWrapper = styled.div`
   > * {
     pointer-events: auto;
   }
+
+  ${({ $placement, theme }) => {
+    const offset = theme.components?.toast?.offset || { vertical: '24px', horizontal: '24px' };
+    const vertical = offset.vertical || '24px';
+    const horizontal = offset.horizontal || '24px';
+
+    const styles: Record<string, string> = {
+      'top-right': `
+        top: ${vertical};
+        right: ${horizontal};
+      `,
+      'top-left': `
+        top: ${vertical};
+        left: ${horizontal};
+      `,
+      'top-center': `
+        top: ${vertical};
+        left: 50%;
+        transform: translateX(-50%);
+      `,
+      'bottom-right': `
+        bottom: ${vertical};
+        right: ${horizontal};
+      `,
+      'bottom-left': `
+        bottom: ${vertical};
+        left: ${horizontal};
+      `,
+      'bottom-center': `
+        bottom: ${vertical};
+        left: 50%;
+        transform: translateX(-50%);
+      `,
+    };
+
+    return styles[$placement] || styles['top-right'];
+  }}
 `;
 
 export interface ToastContainerProps {
+  placement?: 'top-right' | 'top-left' | 'top-center' | 'bottom-right' | 'bottom-left' | 'bottom-center';
   /**
    * Maximum number of toasts to show at once
    */
@@ -58,6 +100,7 @@ export interface ToastContainerProps {
  * </ToastContainer>
  */
 export const ToastContainer: React.FC<ToastContainerProps> = ({
+  placement = 'top-right',
   maxCount = 5,
   defaultDuration = 3000,
   children,
@@ -113,7 +156,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
   return (
     <ToastContext.Provider value={contextValue}>
       {children}
-      <ToastWrapper>
+      <ToastWrapper $placement={placement}>
         {toasts.map((toast) => (
           <Toast
             key={toast.id}

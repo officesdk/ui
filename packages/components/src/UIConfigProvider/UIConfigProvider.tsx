@@ -1,4 +1,5 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { IconProvider } from '../Icon/IconProvider';
 import { ToastContainer } from '../Toast/ToastContainer';
 import type { UIConfig } from './types';
@@ -41,14 +42,36 @@ export interface UIConfigProviderProps {
  * </UIConfigProvider>
  */
 export const UIConfigProvider: React.FC<UIConfigProviderProps> = ({ config, children }) => {
-  registerGlobalContext({theme: config.theme});
   const { icons = {}, toast = {} } = config;
+
+  // Create a compatible render function
+  const renderFunction = (element: React.ReactElement, container: HTMLElement) => {
+    // Try React 18 createRoot first
+    if ('createRoot' in ReactDOM) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { createRoot } = ReactDOM as any;
+      const root = createRoot(container);
+      root.render(element);
+    } else {
+      // Fallback to React 17 and below
+      // eslint-disable-next-line react/no-deprecated
+      ReactDOM.render(element, container);
+    }
+  };
+
+  // Register global context with theme and render function immediately
+  // This must happen before any styled components are rendered
+  registerGlobalContext({
+    theme: config.theme,
+    render: renderFunction,
+  });
 
   const toastConfig = {
     maxCount: toast.maxCount ?? 5,
     defaultDuration: toast.defaultDuration ?? 3000,
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const TooltipStyles = TooltipGlobalStyles as any;
 
   return (
