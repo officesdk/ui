@@ -17,10 +17,15 @@ const meta: Meta<typeof SearchInput> = {
   },
   tags: ['autodocs'],
   argTypes: {
+    lineType: {
+      control: 'radio',
+      options: ['outlined', 'underlined'],
+      description: 'Input line type',
+    },
     size: {
       control: 'radio',
-      options: ['medium', 'large'],
-      description: 'SearchInput size (only medium and large)',
+      options: ['mini', 'small', 'medium', 'large'],
+      description: 'SearchInput size',
     },
     clearable: {
       control: 'boolean',
@@ -51,7 +56,24 @@ type Story = StoryObj<typeof SearchInput>;
 export const Default: Story = {
   args: {
     placeholder: 'Search...',
-    size: 'large',
+    size: 'medium',
+    clearable: true,
+  },
+  render: (args) => (
+    <div style={{ width: '300px' }}>
+      <SearchInput {...args} />
+    </div>
+  ),
+};
+
+/**
+ * Underlined search input
+ */
+export const Underlined: Story = {
+  args: {
+    lineType: 'underlined',
+    placeholder: 'Search...',
+    size: 'medium',
     clearable: true,
   },
   render: (args) => (
@@ -70,9 +92,9 @@ export const Sizes: Story = {
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>
-          ExtraLarge (40px)
+          large (40px)
         </div>
-        <SearchInput size="extraLarge" placeholder="Search extra large..." />
+        <SearchInput size="large" placeholder="Search extra large..." />
       </div>
     </div>
   ),
@@ -221,19 +243,19 @@ export const AllSizesWithStates: Story = {
 
       <div>
         <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
-          ExtraLarge (40px)
+          large (40px)
         </h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <SearchInput size="extraLarge" placeholder="Default" style={{ width: '180px' }} />
-          <SearchInput size="extraLarge" defaultValue="Active" style={{ width: '180px' }} />
-          <SearchInput size="extraLarge" error placeholder="Error" style={{ width: '180px' }} />
+          <SearchInput size="large" placeholder="Default" style={{ width: '180px' }} />
+          <SearchInput size="large" defaultValue="Active" style={{ width: '180px' }} />
+          <SearchInput size="large" error placeholder="Error" style={{ width: '180px' }} />
           <SearchInput
-            size="extraLarge"
+            size="large"
             disabled
             placeholder="Disabled"
             style={{ width: '180px' }}
           />
-          <SearchInput size="extraLarge" readOnly value="ReadOnly" style={{ width: '180px' }} />
+          <SearchInput size="large" readOnly value="ReadOnly" style={{ width: '180px' }} />
         </div>
       </div>
     </div>

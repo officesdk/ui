@@ -1,6 +1,7 @@
 import { button } from './button';
 import { toast } from './toast';
 import { input } from './input';
+import { inputSearch } from './inputSearch';
 import { radio } from './radio';
 import { checkbox } from './checkbox';
 import { switchComponent } from './switch';
@@ -15,6 +16,7 @@ export {
   button,
   toast,
   input,
+  inputSearch,
   radio,
   checkbox,
   switchComponent,
@@ -29,6 +31,7 @@ export {
 export const components = {
   toast,
   input,
+  inputSearch,
   radio,
   checkbox,
   switch: switchComponent,

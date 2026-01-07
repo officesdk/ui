@@ -1,9 +1,15 @@
 import React, { forwardRef, useState } from 'react';
 import { styled } from '../utils/styled';
 
-type InputSize = 'small' | 'medium' | 'large' | 'extraLarge';
+type InputSize = 'mini' | 'small' | 'medium' | 'large';
+type LineType = 'outlined' | 'underlined';
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
+  /**
+   * Input line type
+   */
+  lineType?: LineType;
   /**
    * Input size
    */
@@ -25,6 +31,18 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
    */
   suffixNode?: React.ReactNode;
   /**
+   * Whether to show clear button when input has value
+   */
+  clearable?: boolean;
+  /**
+   * Clear button click handler
+   */
+  onClear?: () => void;
+  /**
+   * Custom clear icon
+   */
+  clearIcon?: React.ReactNode;
+  /**
    * Custom className
    */
   className?: string;
@@ -34,8 +52,34 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   style?: React.CSSProperties;
 }
 
+const InputContainer = styled.div<{
+  $size: InputSize;
+  $lineType: LineType;
+}>`
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+
+  ${({ $size, $lineType, theme }) => {
+    const size = $size || 'medium';
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    if (!sizeConfig) return '';
+
+    return `
+      height: ${sizeConfig.height};
+    `;
+  }}
+`;
+
 const InputWrapper = styled.div<{
   $size: InputSize;
+  $lineType: LineType;
   $error: boolean;
   $disabled: boolean;
   $readOnly: boolean;
@@ -46,22 +90,39 @@ const InputWrapper = styled.div<{
   width: 100%;
   box-sizing: border-box;
   position: relative;
+  flex: 1;
   transition: all 0.2s ease;
 
-  ${({ $size, theme }) => {
+  ${({ $size, $lineType, theme }) => {
     const size = $size || 'medium';
-    const sizeConfig = (theme.components.input.outlined as any)[size];
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    if (!sizeConfig) return '';
+
     return `
       height: ${sizeConfig.height};
-      border-radius: ${sizeConfig.borderRadius};
       padding: ${sizeConfig.padding};
-      font-size: ${sizeConfig.fontSize};
-      line-height: ${sizeConfig.lineHeight};
+      gap: ${sizeConfig.gap || '4px'};
+      ${
+        $lineType === 'outlined'
+          ? `
+        border-radius: ${sizeConfig.borderRadius};
+      `
+          : ''
+      }
     `;
   }}
 
-  ${({ $error, $disabled, $readOnly, $isFocused, theme, $size }) => {
-    const stateConfig = theme.components.input.outlined.state;
+  ${({ $error, $disabled, $readOnly, $isFocused, $lineType, theme, $size }) => {
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const stateConfig = typeConfig?.state;
+    if (!stateConfig) return '';
 
     let borderColor = stateConfig.borderColor;
     let background = stateConfig.background;
@@ -71,42 +132,96 @@ const InputWrapper = styled.div<{
       borderColor = stateConfig.borderColorDisabled;
       background = stateConfig.backgroundDisabled;
     } else if ($readOnly) {
-      borderColor = stateConfig.borderColorReadonly;
-      background = stateConfig.backgroundReadonly;
+      borderColor = stateConfig.borderColorReadonly || stateConfig.borderColor;
+      background = stateConfig.backgroundReadonly || stateConfig.background;
     } else if ($error) {
       borderColor = stateConfig.borderColorError;
-      background = stateConfig.backgroundActive;
+      background = $lineType === 'outlined' ? stateConfig.backgroundActive : stateConfig.background;
     } else if ($isFocused) {
       borderColor = stateConfig.borderColorActive;
       background = stateConfig.backgroundActive;
-      const size = $size || 'medium';
-      boxShadow = (theme.components.input.outlined as any)[size].boxShadowActive;
+      if ($lineType === 'outlined') {
+        const size = $size || 'medium';
+        const sizeConfig = typeConfig?.[size];
+        boxShadow = sizeConfig?.boxShadowActive || 'none';
+      }
     }
 
-    return `
-      border: 1px solid ${borderColor};
-      background: ${background};
-      box-shadow: ${boxShadow};
+    if ($lineType === 'outlined') {
+      return `
+        border: 1px solid ${borderColor};
+        background: ${background};
+        box-shadow: ${boxShadow};
 
-      &:hover:not(:disabled) {
-        ${!$disabled && !$readOnly && !$isFocused ? `
-          border-color: ${stateConfig.borderColorHover};
-          background: ${stateConfig.backgroundHover};
-        ` : ''}
-      }
-    `;
+        &:hover:not(:disabled) {
+          ${
+            !$disabled && !$readOnly && !$isFocused
+              ? `
+            border-color: ${stateConfig.borderColorHover};
+            background: ${stateConfig.backgroundHover};
+          `
+              : ''
+          }
+        }
+      `;
+    } else {
+      // underlined type
+      return `
+        background: ${background};
+        border-bottom: 1px solid ${$error ? borderColor : $isFocused ? borderColor : 'transparent'};
+
+        &:hover:not(:disabled) {
+          ${
+            !$disabled && !$isFocused && !$error
+              ? `
+            border-bottom-color: ${stateConfig.borderColorHover};
+          `
+              : ''
+          }
+        }
+      `;
+    }
   }}
 
-  ${({ $disabled }) => $disabled && `
+  ${({ $disabled }) =>
+    $disabled &&
+    `
     cursor: not-allowed;
-    opacity: 1;
+    opacity: ${$disabled ? '0.6' : '1'};
   `}
+`;
+
+const ContentBlock = styled.div<{
+  $size: InputSize;
+  $lineType: LineType;
+}>`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+
+  ${({ $size, $lineType, theme }) => {
+    const size = $size || 'medium';
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    if (!sizeConfig) return '';
+
+    return `
+      padding: ${sizeConfig.contentPadding || '0'};
+      gap: ${sizeConfig.gap || '4px'};
+    `;
+  }}
 `;
 
 const StyledInput = styled.input<{
   $size: InputSize;
+  $lineType: LineType;
   $disabled: boolean;
   $readOnly: boolean;
+  $isFocused: boolean;
 }>`
   flex: 1;
   border: none;
@@ -116,40 +231,67 @@ const StyledInput = styled.input<{
   padding: 0;
   margin: 0;
   font-family: inherit;
-  color: ${({ theme }) => theme.components.input.outlined.state.borderColorActive};
 
-  ${({ $size, theme }) => {
+  ${({ $size, $lineType, $disabled, theme }) => {
     const size = $size || 'medium';
-    const sizeConfig = (theme.components.input.outlined as any)[size];
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    const stateConfig = typeConfig?.state;
+    if (!sizeConfig || !stateConfig) return '';
+
+    // textColorNormal is used for all states except disabled
+    const textColor = $disabled ? stateConfig.textColorDisabled : stateConfig.textColorNormal;
+
     return `
       font-size: ${sizeConfig.fontSize};
       line-height: ${sizeConfig.lineHeight};
+      color: ${textColor};
     `;
   }}
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.palettes.transparency['30']};
+    color: ${({ $isFocused, $lineType, theme }) => {
+      const typeConfig =
+        $lineType === 'underlined'
+          ? theme.components?.input?.underlined
+          : theme.components?.input?.outlined;
+      const stateConfig = typeConfig?.state;
+      return $isFocused
+        ? stateConfig?.placeholderColorHover || 'rgba(65, 70, 75, 0.3)'
+        : stateConfig?.placeholderColorNormal || 'rgba(65, 70, 75, 0.3)';
+    }};
   }
 
-  ${({ $disabled, theme }) => $disabled && `
+  ${({ $disabled }) =>
+    $disabled &&
+    `
     cursor: not-allowed;
-    color: ${theme.colors.palettes.transparency['30']};
   `}
 
-  ${({ $readOnly }) => $readOnly && `
+  ${({ $readOnly }) =>
+    $readOnly &&
+    `
     cursor: default;
   `}
 `;
 
-const PrefixNode = styled.div<{ $size: InputSize }>`
+const PrefixNode = styled.div<{ $size: InputSize; $lineType: LineType }>`
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  margin-right: 4px;
 
-  ${({ $size, theme }) => {
+  ${({ $size, $lineType, theme }) => {
     const size = $size || 'medium';
-    const sizeConfig = (theme.components.input.outlined as any)[size];
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    if (!sizeConfig) return '';
+
     return `
       svg, img {
         width: ${sizeConfig.iconSize.width};
@@ -159,15 +301,20 @@ const PrefixNode = styled.div<{ $size: InputSize }>`
   }}
 `;
 
-const SuffixNode = styled.div<{ $size: InputSize }>`
+const SuffixNode = styled.div<{ $size: InputSize; $lineType: LineType }>`
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  margin-left: 4px;
 
-  ${({ $size, theme }) => {
+  ${({ $size, $lineType, theme }) => {
     const size = $size || 'medium';
-    const sizeConfig = (theme.components.input.outlined as any)[size];
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    if (!sizeConfig) return '';
+
     return `
       svg, img {
         width: ${sizeConfig.iconSize.width};
@@ -176,17 +323,87 @@ const SuffixNode = styled.div<{ $size: InputSize }>`
     `;
   }}
 `;
+
+const ClearButton = styled.button<{ $size: InputSize; $lineType: LineType }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  transition: opacity 0.2s ease;
+
+  ${({ $size, $lineType, theme }) => {
+    const size = $size || 'medium';
+    const typeConfig =
+      $lineType === 'underlined'
+        ? theme.components?.input?.underlined
+        : theme.components?.input?.outlined;
+    const sizeConfig = typeConfig?.[size];
+    const clearIconSize = sizeConfig?.clearIcon?.size;
+    if (!clearIconSize) return '';
+
+    return `
+      width: ${clearIconSize.width};
+      height: ${clearIconSize.height};
+
+      svg {
+        width: ${clearIconSize.width};
+        height: ${clearIconSize.height};
+      }
+    `;
+  }}
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+`;
+
+const AlertLine = styled.div`
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors?.palettes?.red?.['6'] || '#E95555'};
+`;
+
+const DefaultClearIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path
+      d="M8.00148 8.56042L11.3306 11.8884L11.8961 11.3226L8.56774 7.99531L11.8641 4.70566L11.299 4.1394L8.00196 7.42971L4.70055 4.12939L4.13495 4.69517L7.4357 7.99483L4.10889 11.3149L4.674 11.8812L8.00148 8.56042Z"
+      fill="#41464B"
+      fillOpacity="0.6"
+    />
+  </svg>
+);
 
 /**
  * Input Component
  *
  * @example
- * // Basic input
+ * // Basic outlined input (default)
  * <Input placeholder="Enter text" />
  *
  * @example
+ * // Underlined input
+ * <Input lineType="underlined" placeholder="Enter text" />
+ *
+ * @example
  * // Input with prefix and suffix
- * <Input prefixNode={<SearchIcon />} suffixNode={<CloseIcon />} />
+ * <Input prefixNode={<SearchIcon />} suffixNode={<Icon />} />
+ *
+ * @example
+ * // Input with clearable
+ * <Input clearable onClear={() => console.log('cleared')} />
  *
  * @example
  * // Input with error state
@@ -195,21 +412,35 @@ const SuffixNode = styled.div<{ $size: InputSize }>`
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      lineType = 'outlined',
       size = 'medium',
       error = false,
       disabled = false,
       readOnly = false,
       prefixNode,
       suffixNode,
+      clearable = false,
+      onClear,
+      clearIcon,
       className,
       style,
       onFocus,
       onBlur,
+      value,
+      onChange,
       ...rest
     },
     ref
   ) => {
     const [isFocused, setIsFocused] = useState(false);
+    const [internalValue, setInternalValue] = useState(
+      value !== undefined ? value : (rest.defaultValue as string) || ''
+    );
+
+    // Controlled vs Uncontrolled
+    const isControlled = value !== undefined;
+    const currentValue = isControlled ? value : internalValue;
+    const hasValue = !!currentValue && String(currentValue).length > 0;
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);
@@ -221,33 +452,91 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onBlur?.(e);
     };
 
-    return (
-      <InputWrapper
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!isControlled) {
+        setInternalValue(e.target.value);
+      }
+      onChange?.(e);
+    };
+
+    const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!isControlled) {
+        setInternalValue('');
+      }
+
+      // Trigger onChange event for controlled components
+      if (onChange && ref && 'current' in ref && ref.current) {
+        const syntheticEvent = {
+          target: { ...ref.current, value: '' },
+          currentTarget: ref.current,
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange(syntheticEvent);
+      }
+
+      onClear?.();
+    };
+
+    // Show clear button when clearable and has value
+    const shouldShowClearButton = clearable && hasValue && !disabled && !readOnly;
+    const clearButtonNode = shouldShowClearButton ? (
+      <ClearButton
+        type="button"
         $size={size}
-        $error={error}
-        $disabled={!!disabled}
-        $readOnly={!!readOnly}
-        $isFocused={isFocused}
-        className={className}
-        style={style}
+        $lineType={lineType}
+        onClick={handleClear}
+        aria-label="Clear"
+        tabIndex={-1}
       >
-        {prefixNode && <PrefixNode $size={size}>{prefixNode}</PrefixNode>}
-        <StyledInput
-          ref={ref}
+        {clearIcon || <DefaultClearIcon />}
+      </ClearButton>
+    ) : null;
+
+    return (
+      <InputContainer $size={size} $lineType={lineType} className={className} style={style}>
+        <InputWrapper
           $size={size}
+          $lineType={lineType}
+          $error={error}
           $disabled={!!disabled}
           $readOnly={!!readOnly}
-          disabled={disabled}
-          readOnly={readOnly}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          {...rest}
-        />
-        {suffixNode && <SuffixNode $size={size}>{suffixNode}</SuffixNode>}
-      </InputWrapper>
+          $isFocused={isFocused}
+        >
+          {prefixNode && (
+            <PrefixNode $size={size} $lineType={lineType}>
+              {prefixNode}
+            </PrefixNode>
+          )}
+          <ContentBlock $size={size} $lineType={lineType}>
+            <StyledInput
+              ref={ref}
+              $size={size}
+              $lineType={lineType}
+              $disabled={!!disabled}
+              $readOnly={!!readOnly}
+              $isFocused={isFocused}
+              disabled={disabled}
+              readOnly={readOnly}
+              value={currentValue}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              {...rest}
+            />
+            {clearButtonNode}
+          </ContentBlock>
+          {suffixNode && (
+            <SuffixNode $size={size} $lineType={lineType}>
+              {suffixNode}
+            </SuffixNode>
+          )}
+        </InputWrapper>
+        {lineType === 'underlined' && error && <AlertLine />}
+      </InputContainer>
     );
   }
 );
 
 Input.displayName = 'Input';
-

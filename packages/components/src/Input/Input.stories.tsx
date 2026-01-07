@@ -48,9 +48,14 @@ const meta: Meta<typeof Input> = {
   },
   tags: ['autodocs'],
   argTypes: {
+    lineType: {
+      control: 'radio',
+      options: ['outlined', 'underlined'],
+      description: 'Input line type',
+    },
     size: {
       control: 'radio',
-      options: ['small', 'medium', 'large', 'extraLarge'],
+      options: ['small', 'medium', 'large', 'large'],
       description: 'Input size',
     },
     error: {
@@ -64,6 +69,10 @@ const meta: Meta<typeof Input> = {
     readOnly: {
       control: 'boolean',
       description: 'Whether the input is readonly',
+    },
+    clearable: {
+      control: 'boolean',
+      description: 'Whether to show clear button when input has value',
     },
     placeholder: {
       control: 'text',
@@ -88,70 +97,79 @@ export const Default: Story = {
 };
 
 export const Sizes: Story = {
-  render: () => (
+  args: {
+    placeholder: 'Default placeholder',
+    size: 'medium',
+  },
+  render: (args) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
       <div>
-        <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Small (24px)</div>
-        <Input size="small" placeholder="Small input" />
+        <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Small (20px)</div>
+        <Input {...args} size="mini" placeholder="Mini input" />
       </div>
       <div>
-        <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Medium (32px)</div>
-        <Input size="medium" placeholder="Medium input" />
+        <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Medium (24px)</div>
+        <Input {...args} size="small" placeholder="Small input" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Large (32px)</div>
-        <Input size="large" placeholder="Large input" />
+        <Input {...args} size="medium" placeholder="Medium input" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>
-          ExtraLarge (40px)
+          large (40px)
         </div>
-        <Input size="extraLarge" placeholder="ExtraLarge input" />
+        <Input {...args} size="large" placeholder="large input" />
       </div>
     </div>
   ),
 };
 
 export const States: Story = {
-  render: () => (
+  args: {
+    placeholder: 'Default placeholder',
+    size: 'medium',
+  },
+  render: (args) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Default</div>
-        <Input placeholder="Default state" />
+        <Input {...args} placeholder="Default state" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>
           Hover (hover over input)
         </div>
-        <Input placeholder="Hover state" />
+        <Input {...args} placeholder="Hover state" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>
           Active (click to focus)
         </div>
-        <Input placeholder="Active state" />
+        <Input {...args} placeholder="Active state" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Error</div>
-        <Input error placeholder="Error state" />
+        <Input {...args} error placeholder="Error state" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Disabled</div>
-        <Input disabled placeholder="Disabled state" />
+        <Input {...args} disabled placeholder="Disabled state" />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>ReadOnly</div>
-        <Input readOnly value="ReadOnly value" />
+        <Input {...args} readOnly value="ReadOnly value" />
       </div>
     </div>
   ),
 };
 
-const WithValueComponent = () => {
+const WithValueComponent = (args: Story['args']) => {
   const [value, setValue] = useState('Input content');
   return (
     <div style={{ width: '300px' }}>
       <Input
+        {...args}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Type something..."
@@ -161,25 +179,28 @@ const WithValueComponent = () => {
 };
 
 export const WithValue: Story = {
-  render: () => <WithValueComponent />,
+  args: {
+  },
+  render: (args) => <WithValueComponent {...args} />,
 };
 
 export const WithPrefixNode: Story = {
-  render: () => (
+
+  render: (args) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>With search icon</div>
-        <Input prefixNode={<SearchIcon />} placeholder="Search..." />
+        <Input {...args} prefixNode={<SearchIcon />} placeholder="Search..." />
       </div>
       <div>
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>With text prefix</div>
-        <Input prefixNode={<span style={{ color: '#999' }}>Type:</span>} placeholder="Enter type" />
+        <Input {...args} prefixNode={<span style={{ color: '#999' }}>Type:</span>} placeholder="Enter type" />
       </div>
     </div>
   ),
 };
 
-const WithSuffixNodeComponent = () => {
+const WithSuffixNodeComponent = (args: Story['args']) => {
   const [value, setValue] = useState('Some content');
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
@@ -187,7 +208,7 @@ const WithSuffixNodeComponent = () => {
         <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>
           With clear button
         </div>
-        <Input
+        <Input {...args}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           suffixNode={
@@ -215,14 +236,19 @@ const WithSuffixNodeComponent = () => {
 };
 
 export const WithSuffixNode: Story = {
-  render: () => <WithSuffixNodeComponent />,
+  args: {
+    placeholder: 'Default placeholder',
+    clearable: false,
+  },
+  render: (args) => <WithSuffixNodeComponent {...args} />,
 };
 
-const WithBothNodesComponent = () => {
+const WithBothNodesComponent = (args: Story['args']) => {
   const [value, setValue] = useState('');
   return (
     <div style={{ width: '300px' }}>
       <Input
+        {...args}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         prefixNode={<SearchIcon />}
@@ -250,55 +276,59 @@ const WithBothNodesComponent = () => {
 };
 
 export const WithBothNodes: Story = {
-  render: () => <WithBothNodesComponent />,
+  render: (args) => <WithBothNodesComponent {...args} />,
 };
 
 export const AllSizesWithStates: Story = {
-  render: () => (
+  args: {
+    placeholder: 'Default placeholder',
+    size: 'medium',
+  },
+  render: (args) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
         <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>small (20px)</h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <Input size="small" placeholder="Default" style={{ width: '180px' }} />
-          <Input size="small" placeholder="Active" style={{ width: '180px' }} />
-          <Input size="small" error placeholder="Error" style={{ width: '180px' }} />
-          <Input size="small" disabled placeholder="Disabled" style={{ width: '180px' }} />
-          <Input size="small" readOnly value="ReadOnly" style={{ width: '180px' }} />
+          <Input {...args} defaultValue="Default" size="small" placeholder="Default" style={{ width: '180px' }} />
+          <Input {...args} size="small" placeholder="Active" style={{ width: '180px' }} />
+          <Input {...args} size="small" error placeholder="Error" style={{ width: '180px' }} />
+          <Input {...args} size="small" disabled placeholder="Disabled" style={{ width: '180px' }} />
+          <Input {...args} size="small" readOnly value="ReadOnly" style={{ width: '180px' }} />
         </div>
       </div>
 
       <div>
         <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>medium (24px)</h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <Input size="medium" placeholder="Default" style={{ width: '180px' }} />
-          <Input size="medium" placeholder="Active" style={{ width: '180px' }} />
-          <Input size="medium" error placeholder="Error" style={{ width: '180px' }} />
-          <Input size="medium" disabled placeholder="Disabled" style={{ width: '180px' }} />
-          <Input size="medium" readOnly value="ReadOnly" style={{ width: '180px' }} />
+          <Input {...args} size="medium" placeholder="Default" style={{ width: '180px' }} />
+          <Input {...args} size="medium" placeholder="Active" style={{ width: '180px' }} />
+          <Input {...args} size="medium" error placeholder="Error" style={{ width: '180px' }} />
+          <Input {...args} size="medium" disabled placeholder="Disabled" style={{ width: '180px' }} />
+          <Input {...args} size="medium" readOnly value="ReadOnly" style={{ width: '180px' }} />
         </div>
       </div>
 
       <div>
         <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>large (32px)</h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <Input size="large" placeholder="Default" style={{ width: '180px' }} />
-          <Input size="large" placeholder="Active" style={{ width: '180px' }} />
-          <Input size="large" error placeholder="Error" style={{ width: '180px' }} />
-          <Input size="large" disabled placeholder="Disabled" style={{ width: '180px' }} />
-          <Input size="large" readOnly value="ReadOnly" style={{ width: '180px' }} />
+          <Input {...args} size="large" placeholder="Default" style={{ width: '180px' }} />
+          <Input {...args} size="large" placeholder="Active" style={{ width: '180px' }} />
+          <Input {...args} size="large" error placeholder="Error" style={{ width: '180px' }} />
+          <Input {...args} size="large" disabled placeholder="Disabled" style={{ width: '180px' }} />
+          <Input {...args} size="large" readOnly value="ReadOnly" style={{ width: '180px' }} />
         </div>
       </div>
 
       <div>
         <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
-          extraLarge (40px)
+          large (40px)
         </h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <Input size="extraLarge" placeholder="Default" style={{ width: '180px' }} />
-          <Input size="extraLarge" placeholder="Active" style={{ width: '180px' }} />
-          <Input size="extraLarge" error placeholder="Error" style={{ width: '180px' }} />
-          <Input size="extraLarge" disabled placeholder="Disabled" style={{ width: '180px' }} />
-          <Input size="extraLarge" readOnly value="ReadOnly" style={{ width: '180px' }} />
+          <Input {...args} size="large" placeholder="Default" style={{ width: '180px' }} />
+          <Input {...args} size="large" placeholder="Active" style={{ width: '180px' }} />
+          <Input {...args} size="large" error placeholder="Error" style={{ width: '180px' }} />
+          <Input {...args} size="large" disabled placeholder="Disabled" style={{ width: '180px' }} />
+          <Input {...args} size="large" readOnly value="ReadOnly" style={{ width: '180px' }} />
         </div>
       </div>
     </div>
@@ -318,4 +348,123 @@ export const Playground: Story = {
       <Input {...args} />
     </div>
   ),
+};
+
+/**
+ * Underlined input type
+ */
+export const Underlined: Story = {
+  args: {
+    lineType: 'underlined',
+    placeholder: 'Enter text...',
+    size: 'medium',
+  },
+  render: (args) => (
+    <div style={{ width: '300px' }}>
+      <Input {...args} />
+    </div>
+  ),
+};
+
+/**
+ * Underlined with clearable
+ */
+export const UnderlinedWithClearable: Story = {
+  args: {
+    lineType: 'underlined',
+    placeholder: 'Search...',
+    clearable: true,
+    defaultValue: 'content',
+    prefixNode: <SearchIcon />,
+  },
+  render: (args) => (
+    <div style={{ width: '300px' }}>
+      <Input {...args} />
+    </div>
+  ),
+};
+
+/**
+ * Comparison of outlined vs underlined
+ */
+export const LineTypeComparison: Story = {
+  args: {
+    placeholder: 'Default placeholder',
+    size: 'medium',
+  },
+  render: (args) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', width: '400px' }}>
+      <div>
+        <div style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
+          Outlined (Default)
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Input {...args} placeholder="Default state" />
+          <Input {...args} placeholder="With prefix" prefixNode={<SearchIcon />} />
+          <Input {...args} placeholder="With clearable" clearable defaultValue="content" />
+          <Input {...args} placeholder="Error state" error defaultValue="error content" />
+          <Input {...args} placeholder="Disabled" disabled defaultValue="disabled" />
+        </div>
+      </div>
+      <div>
+        <div style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
+          Underlined
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Input {...args} lineType="underlined" placeholder="Default state" />
+          <Input {...args} lineType="underlined" placeholder="With prefix" prefixNode={<SearchIcon />} />
+          <Input {...args} lineType="underlined" placeholder="With clearable" clearable defaultValue="content" />
+          <Input {...args} lineType="underlined" placeholder="Error state" error defaultValue="error content" />
+          <Input {...args} lineType="underlined" placeholder="Disabled" disabled defaultValue="disabled" />
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+/**
+ * With clearable functionality
+ */
+export const WithClearable: Story = {
+  args: {
+    placeholder: 'Default placeholder',
+    size: 'medium',
+  },
+  render: (args: Story['args']) => {
+    const [value1, setValue1] = useState('');
+    const [value2, setValue2] = useState('');
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '400px' }}>
+        <div>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+            Outlined with Clearable
+          </div>
+          <Input
+            {...args}
+            value={value1}
+            onChange={(e) => setValue1(e.target.value)}
+            onClear={() => setValue1('')}
+            placeholder="Type something..."
+            clearable
+          />
+        </div>
+        <div>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+            Underlined with Clearable
+          </div>
+          <Input
+            {...args}
+            lineType="underlined"
+            value={value2}
+            onChange={(e) => setValue2(e.target.value)}
+            onClear={() => setValue2('')}
+            placeholder="Type something..."
+            clearable
+            prefixNode={<SearchIcon />}
+          />
+        </div>
+      </div>
+    );
+  },
 };

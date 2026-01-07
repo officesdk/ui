@@ -2635,7 +2635,7 @@ __metadata:
     "@officesdk/design-theme": "workspace:*"
     "@officesdk/design-utils": "workspace:*"
   peerDependencies:
-    "@officesdk/editor-sdk-core": 0.0.0-alpha.7
+    "@officesdk/editor-sdk-core": 0.0.0-alpha.8
     rc-tooltip: ^6.0.0
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
@@ -2643,10 +2643,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@officesdk/editor-sdk-core@npm:0.0.0-alpha.7":
-  version: 0.0.0-alpha.7
-  resolution: "@officesdk/editor-sdk-core@npm:0.0.0-alpha.7"
-  checksum: 10c0/8380b220952ac589dddac182151e2ea30c64c540fafda881acea7400278748249bdea98dbc00dbb4e8c1e20041794a7dff7e1f24bc2c5108c4e73da0bebf83ba
+"@officesdk/editor-sdk-core@npm:0.0.0-alpha.8":
+  version: 0.0.0-alpha.8
+  resolution: "@officesdk/editor-sdk-core@npm:0.0.0-alpha.8"
+  checksum: 10c0/612d4f1f2baa573f2c7a454808fe321d2674b4d412ed230a467dc9162529110ea9a81123c6060b373d9d16560e2cdc92b00bfbfaa00d3b6f991c7c8450fb8b83
   languageName: node
   linkType: hard
 
@@ -10523,7 +10523,7 @@ __metadata:
   resolution: "officesdk-design-monorepo@workspace:."
   dependencies:
     "@changesets/cli": "npm:^2.29.8"
-    "@officesdk/editor-sdk-core": "npm:0.0.0-alpha.7"
+    "@officesdk/editor-sdk-core": "npm:0.0.0-alpha.8"
     "@storybook/addon-docs": "npm:^7.6.7"
     "@storybook/addon-essentials": "npm:^7.6.7"
     "@storybook/addon-interactions": "npm:^7.6.7"

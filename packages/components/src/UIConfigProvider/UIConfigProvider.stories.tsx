@@ -59,8 +59,8 @@ const DemoComponent = () => {
             Warning Toast
           </Button>
           <Button onClick={() => toast.info('With action', {
-            actionText: 'Action',
-            onAction: () => alert('Action clicked!'),
+            mainButtonText: 'Action',
+            onMainButtonClick: () => alert('Action clicked!'),
             closable: true,
           })}>
             Toast with Action

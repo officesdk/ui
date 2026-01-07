@@ -13,8 +13,8 @@ export type { CheckboxProps } from './Checkbox';
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
 
-export { Input, SearchInput } from './Input';
-export type { InputProps, SearchInputProps } from './Input';
+export { Input, SearchInput, UnderlinedInput } from './Input';
+export type { InputProps, SearchInputProps, UnderlinedInputProps } from './Input';
 
 export { NumberInput } from './NumberInput';
 export type { NumberInputProps } from './NumberInput';
