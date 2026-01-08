@@ -118,9 +118,9 @@ const Thumb = styled.div<{
 }>`
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   border-style: solid;
   box-sizing: border-box;
+  left: 0;
   transition: ${({ theme }) => theme.components.switch.transition || 'all 0.2s ease'};
 
   ${({ $size, $checked, theme }) => {
@@ -130,12 +130,23 @@ const Thumb = styled.div<{
     const thumbBorderRadius = sizeConfig.thumb.borderRadius;
     const thumbBorderWidth = sizeConfig.thumb.borderWidth;
 
+    // Calculate thumb position based on track width
+    const trackWidth = sizeConfig.container.width;
+    const thumbSizeNum = parseFloat(thumbSize);
+    const offsetNum = parseFloat(thumbOffset);
+    const trackWidthNum = parseFloat(trackWidth);
+
+    // Position from left (unchecked: offset, checked: trackWidth - thumbSize - offset)
+    const leftPosition = $checked
+      ? `${trackWidthNum - thumbSizeNum - offsetNum}px`
+      : thumbOffset;
+
     return `
       width: ${thumbSize};
       height: ${thumbSize};
       border-radius: ${thumbBorderRadius};
       border-width: ${thumbBorderWidth};
-      ${$checked ? 'right' : 'left'}: ${thumbOffset};
+      transform: translate(${leftPosition}, -50%);
     `;
   }}
 
