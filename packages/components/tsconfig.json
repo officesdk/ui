@@ -5,8 +5,14 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "paths": {
-      "@officesdk/design-theme": [
+      "@officesdk/design/theme": [
         "../../packages/theme/src/index.ts"
+      ],
+      "@officesdk/design/utils": [
+        "../../packages/utils/src/index.ts"
+      ],
+      "@officesdk/design/icons": [
+        "../../packages/icons/src/index.ts"
       ]
     },
     "composite": false,

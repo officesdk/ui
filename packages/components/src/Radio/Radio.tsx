@@ -4,10 +4,12 @@ import { styled } from '../utils/styled';
 export interface RadioProps {
   /**
    * Whether the radio is checked
+   * @default false
    */
   checked?: boolean;
   /**
    * Default checked state
+   * @default false
    */
   defaultChecked?: boolean;
   /**
@@ -30,6 +32,11 @@ export interface RadioProps {
    * Callback when checked state changes
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * prevent default click event, if true, change event will not be triggered
+   * @default false
+   */
+  clickPreventDefault?: boolean;
   /**
    * Custom className
    */
@@ -152,6 +159,7 @@ const RadioInner = styled.div<{
  * <Radio checked={true} onChange={(e) => console.log(e.target.checked)} />
  */
 export const Radio: React.FC<RadioProps> = ({
+  clickPreventDefault = false,
   checked: controlledChecked,
   defaultChecked = false,
   disabled = false,
@@ -192,11 +200,19 @@ export const Radio: React.FC<RadioProps> = ({
     setIsFocused(false);
   }, []);
 
+  const handleContainerClick = useCallback((e: React.MouseEvent) => {
+    // Prevent event bubbling to avoid triggering parent element's click handlers
+    if (clickPreventDefault) {
+      e.preventDefault();
+    }
+  }, []);
+
   return (
     <RadioContainer
       $disabled={disabled}
       className={className}
       style={style}
+      onClick={handleContainerClick}
     >
       <HiddenInput
         type="radio"

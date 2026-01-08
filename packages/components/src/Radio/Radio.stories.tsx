@@ -55,6 +55,12 @@ export const DisabledChecked: Story = {
   },
 };
 
+export const ClickPreventDefault: Story = {
+  args: {
+    clickPreventDefault: true,
+  },
+};
+
 // Radio group example
 export const RadioGroup: Story = {
   render: () => {

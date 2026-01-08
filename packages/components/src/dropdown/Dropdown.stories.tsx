@@ -288,7 +288,7 @@ export const Placements: Story = {
           <DropdownButton variant="frameless" value="Top Left" />
         </Dropdown>
 
-        <Dropdown overlay={menu} placement="topCenter">
+        <Dropdown overlay={menu} placement="top">
           <DropdownButton variant="frameless" value="Top Center" />
         </Dropdown>
 
@@ -300,7 +300,7 @@ export const Placements: Story = {
           <DropdownButton variant="frameless" value="Bottom Left" />
         </Dropdown>
 
-        <Dropdown overlay={menu} placement="bottomCenter">
+        <Dropdown overlay={menu} placement="bottom">
           <DropdownButton variant="frameless" value="Bottom Center" />
         </Dropdown>
 
@@ -467,7 +467,7 @@ export const CompleteExample: Story = {
           <ul style={{ fontSize: '12px', margin: 0, paddingLeft: '20px' }}>
             <li>✅ DropdownButton (framed with icon)</li>
             <li>✅ Menu with groups and dividers</li>
-            <li>✅ SubMenu support (hover "More")</li>
+            <li>✅ SubMenu support (hover &quot;More&quot;)</li>
             <li>✅ Search functionality</li>
             <li>✅ Keyboard shortcuts display</li>
             <li>✅ Controlled open/close state</li>

@@ -35,6 +35,11 @@ export interface CheckboxProps {
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   /**
+   * prevent default click event, if true, change event will not be triggered
+   * @default false
+   */
+  clickPreventDefault?: boolean;
+  /**
    * Custom className
    */
   className?: string;
@@ -194,6 +199,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   name,
   id,
   onChange,
+  clickPreventDefault = false,
   className,
   style,
 }) => {
@@ -235,11 +241,19 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     setIsFocused(false);
   }, []);
 
+  const handleContainerClick = useCallback((e: React.MouseEvent) => {
+    // Prevent event bubbling to avoid triggering parent element's click handlers
+    if (clickPreventDefault) {
+      e.preventDefault();
+    }
+  }, []);
+
   return (
     <CheckboxContainer
       $disabled={disabled}
       className={className}
       style={style}
+      onClick={handleContainerClick}
     >
       <HiddenInput
         ref={inputRef}
