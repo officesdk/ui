@@ -2637,11 +2637,11 @@ __metadata:
     "@officesdk/design-icons": "workspace:*"
     "@officesdk/design-theme": "workspace:*"
     "@officesdk/design-utils": "workspace:*"
+    "@officesdk/editor-sdk-core": "npm:0.0.0-alpha.9"
+    rc-menu: "npm:^9.0.0"
+    rc-virtual-list: "npm:^3.0.0"
   peerDependencies:
-    "@officesdk/editor-sdk-core": 0.0.0-alpha.9
-    rc-menu: ^9.0.0
     rc-tooltip: ^6.0.0
-    rc-virtual-list: ^3.0.0
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
     styled-components: ">=5.2.0"
@@ -11297,7 +11297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-menu@npm:^9.16.1":
+"rc-menu@npm:^9.0.0, rc-menu@npm:^9.16.1":
   version: 9.16.1
   resolution: "rc-menu@npm:9.16.1"
   dependencies:
@@ -11386,7 +11386,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-virtual-list@npm:^3.19.2":
+"rc-virtual-list@npm:^3.0.0, rc-virtual-list@npm:^3.19.2":
   version: 3.19.2
   resolution: "rc-virtual-list@npm:3.19.2"
   dependencies:
