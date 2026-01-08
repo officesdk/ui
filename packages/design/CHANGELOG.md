@@ -1,5 +1,12 @@
 # @officesdk/design
 
+## 0.1.9
+
+### Patch Changes
+
+- e183549: feat: add menu, dropdownButton and dropdown
+- 2af3c16: feat: add UnderlineInput and SearchInput
+
 ## 0.1.8
 
 ### Patch Changes
