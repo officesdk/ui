@@ -3,11 +3,11 @@ import RcDropdown from 'rc-dropdown';
 import type { DropdownProps as RcDropdownProps } from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
 
-export interface DropdownProps extends Omit<Partial<RcDropdownProps>, 'prefixCls' | 'overlay'> {
+export interface DropdownProps extends Omit<Partial<RcDropdownProps>, 'prefixCls' | 'placement'> {
   /**
    * Dropdown overlay content (usually a Menu component)
    */
-  overlay?: React.ReactNode;
+  overlay?: React.ReactElement | (() => React.ReactElement);
   /**
    * Trigger action (click, hover, contextMenu)
    */
@@ -15,7 +15,7 @@ export interface DropdownProps extends Omit<Partial<RcDropdownProps>, 'prefixCls
   /**
    * Placement of dropdown
    */
-  placement?: 'topLeft' | 'topCenter' | 'topRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight';
+  placement?: 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight';
   /**
    * Whether dropdown is visible (controlled)
    */
@@ -100,19 +100,21 @@ export const Dropdown: React.FC<DropdownProps> = ({
     onVisibleChange?.(visible);
   };
 
-  const dropdownProps = {
-    overlay: overlay || <div />,
-    trigger,
-    placement,
-    visible: isVisible,
-    onVisibleChange: handleVisibleChange,
-    prefixCls: 'od-dropdown',
-    ...(overlayClassName && { overlayClassName }),
-    ...(getPopupContainer && { getPopupContainer }),
-    ...rest,
-  };
-
-  return <RcDropdown {...dropdownProps}>{children}</RcDropdown>;
+  return (
+    <RcDropdown
+      overlay={overlay || <div />}
+      trigger={trigger}
+      placement={placement}
+      visible={isVisible}
+      onVisibleChange={handleVisibleChange}
+      prefixCls="od-dropdown"
+      overlayClassName={overlayClassName}
+      getPopupContainer={getPopupContainer}
+      {...rest}
+    >
+      {children}
+    </RcDropdown>
+  );
 };
 
 Dropdown.displayName = 'Dropdown';
