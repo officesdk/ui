@@ -40,7 +40,7 @@ describe('NumberInput', () => {
 
       await user.click(upButton);
 
-      expect(handleChange).toHaveBeenCalledWith(1);
+      expect(handleChange).toHaveBeenCalledWith(1, 1);
     });
 
     it('should decrement value when down button is clicked', async () => {
@@ -110,7 +110,7 @@ describe('NumberInput', () => {
 
       await user.click(downButton);
 
-      expect(handleChange).toHaveBeenCalledWith(0, 0);
+      expect(handleChange).toHaveBeenCalledWith(0, -1);
     });
 
     it('should respect max value', async () => {
@@ -124,7 +124,7 @@ describe('NumberInput', () => {
 
       await user.click(upButton);
 
-      expect(handleChange).toHaveBeenCalledWith(100, 100);
+      expect(handleChange).toHaveBeenCalledWith(100, 101);
     });
   });
 
