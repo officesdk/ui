@@ -50,7 +50,7 @@ const meta: Meta<typeof Input> = {
   argTypes: {
     lineType: {
       control: 'radio',
-      options: ['outlined', 'underlined'],
+      options: ['outlined', 'underlined', 'borderless'],
       description: 'Input line type',
     },
     size: {
@@ -367,6 +367,22 @@ export const Underlined: Story = {
 };
 
 /**
+ * Borderless input type (no border, no boxShadow)
+ */
+export const Borderless: Story = {
+  args: {
+    lineType: 'borderless',
+    placeholder: 'Type here...',
+    size: 'medium',
+  },
+  render: (args) => (
+    <div style={{ width: '300px' }}>
+      <Input {...args} />
+    </div>
+  ),
+};
+
+/**
  * Underlined with clearable
  */
 export const UnderlinedWithClearable: Story = {
@@ -385,7 +401,7 @@ export const UnderlinedWithClearable: Story = {
 };
 
 /**
- * Comparison of outlined vs underlined
+ * Comparison of all line types
  */
 export const LineTypeComparison: Story = {
   args: {
@@ -416,6 +432,18 @@ export const LineTypeComparison: Story = {
           <Input {...args} lineType="underlined" placeholder="With clearable" clearable defaultValue="content" />
           <Input {...args} lineType="underlined" placeholder="Error state" error defaultValue="error content" />
           <Input {...args} lineType="underlined" placeholder="Disabled" disabled defaultValue="disabled" />
+        </div>
+      </div>
+      <div>
+        <div style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
+          Borderless (No border, no shadow)
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Input {...args} lineType="borderless" placeholder="Default state" />
+          <Input {...args} lineType="borderless" placeholder="With prefix" prefixNode={<SearchIcon />} />
+          <Input {...args} lineType="borderless" placeholder="With clearable" clearable defaultValue="content" />
+          <Input {...args} lineType="borderless" placeholder="Error state" error defaultValue="error content" />
+          <Input {...args} lineType="borderless" placeholder="Disabled" disabled defaultValue="disabled" />
         </div>
       </div>
     </div>

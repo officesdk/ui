@@ -2,7 +2,7 @@ import React, { forwardRef, useState } from 'react';
 import { styled } from '../utils/styled';
 
 type InputSize = 'mini' | 'small' | 'medium' | 'large';
-type LineType = 'outlined' | 'underlined';
+type LineType = 'outlined' | 'underlined' | 'borderless';
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
@@ -155,7 +155,18 @@ const InputWrapper = styled.div<{
       }
     }
 
-    if ($lineType === 'outlined') {
+    if ($lineType === 'borderless') {
+      // borderless type: no border, no boxShadow
+      return `
+        border: none;
+        background: transparent;
+        box-shadow: none;
+
+        &:hover:not(:disabled) {
+          background: transparent;
+        }
+      `;
+    } else if ($lineType === 'outlined') {
       return `
         border: 1px solid ${borderColor};
         background: ${background};
