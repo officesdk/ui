@@ -54,7 +54,7 @@ describe('NumberInput', () => {
 
       await user.click(downButton);
 
-      expect(handleChange).toHaveBeenCalledWith(-1);
+      expect(handleChange).toHaveBeenCalledWith(-1, -1);
     });
 
     it('should handle keyboard arrow up', async () => {
@@ -67,7 +67,7 @@ describe('NumberInput', () => {
       await user.click(input);
       await user.keyboard('{ArrowUp}');
 
-      expect(handleChange).toHaveBeenCalledWith(1);
+      expect(handleChange).toHaveBeenCalledWith(1, 1);
     });
 
     it('should handle keyboard arrow down', async () => {
@@ -80,7 +80,7 @@ describe('NumberInput', () => {
       await user.click(input);
       await user.keyboard('{ArrowDown}');
 
-      expect(handleChange).toHaveBeenCalledWith(-1);
+      expect(handleChange).toHaveBeenCalledWith(-1, -1);
     });
 
     it('should parse and update value on blur', async () => {
@@ -94,7 +94,7 @@ describe('NumberInput', () => {
       await user.type(input, '42');
       await user.tab();
 
-      expect(handleChange).toHaveBeenCalledWith(42);
+      expect(handleChange).toHaveBeenCalledWith(42, 42);
     });
   });
 
@@ -110,7 +110,7 @@ describe('NumberInput', () => {
 
       await user.click(downButton);
 
-      expect(handleChange).toHaveBeenCalledWith(0);
+      expect(handleChange).toHaveBeenCalledWith(0, 0);
     });
 
     it('should respect max value', async () => {
@@ -124,7 +124,7 @@ describe('NumberInput', () => {
 
       await user.click(upButton);
 
-      expect(handleChange).toHaveBeenCalledWith(100);
+      expect(handleChange).toHaveBeenCalledWith(100, 100);
     });
   });
 
@@ -170,7 +170,7 @@ describe('NumberInput', () => {
       await user.type(input, '75');
       await user.tab();
 
-      expect(handleChange).toHaveBeenCalledWith(75);
+      expect(handleChange).toHaveBeenCalledWith(75, 75);
     });
   });
 
