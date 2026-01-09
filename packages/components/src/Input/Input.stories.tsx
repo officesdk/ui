@@ -468,3 +468,143 @@ export const WithClearable: Story = {
     );
   },
 };
+
+/**
+ * Custom className and style props demonstration
+ */
+export const CustomStyling: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', width: '500px' }}>
+      <div>
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
+          Understanding className vs inputClassName
+        </h3>
+
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: '#5ba0e7' }}>
+            1. className (applies to InputWrapper)
+          </div>
+          <Input
+            placeholder="Custom wrapper border..."
+            className="custom-wrapper"
+            prefixNode={<SearchIcon />}
+          />
+          <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            Blue dashed border on InputWrapper (outer container with prefix/suffix)
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: '#e95555' }}>
+            2. inputClassName (applies to input element)
+          </div>
+          <Input
+            placeholder="Custom input text..."
+            inputClassName="custom-input"
+            prefixNode={<SearchIcon />}
+          />
+          <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            Green bold text on input element only
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: '#4ea44b' }}>
+            3. Both className + inputClassName
+          </div>
+          <Input
+            placeholder="Type here..."
+            className="wrapper-style"
+            inputClassName="input-style"
+            prefixNode={<SearchIcon />}
+            clearable
+            defaultValue="Combined styling"
+          />
+          <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            Wrapper has purple background, input has yellow background
+          </div>
+        </div>
+
+        <div>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: '#764ba2' }}>
+            4. style + inputStyle (inline styles)
+          </div>
+          <Input
+            placeholder="Inline styles..."
+            style={{ border: '2px solid #667eea', borderRadius: '8px' }}
+            inputStyle={{ fontWeight: 'bold', color: '#764ba2', fontSize: '16px' }}
+            prefixNode={<SearchIcon />}
+          />
+          <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            style for wrapper, inputStyle for input element
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        background: '#f9f9f9',
+        padding: '24px',
+        borderRadius: '8px',
+        border: '1px dashed #ccc'
+      }}>
+        <h3 style={{ marginTop: 0, marginBottom: '16px', fontSize: '14px', fontWeight: 600 }}>
+          Practical Example: Form Field with Custom Styling
+        </h3>
+        <Input
+          placeholder="Enter your email..."
+          className="form-field-wrapper"
+          inputClassName="form-field-input"
+          prefixNode={
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 5L8 9L14 5" stroke="currentColor" strokeWidth="1.5"/>
+              <rect x="2" y="4" width="12" height="9" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+            </svg>
+          }
+          clearable
+        />
+        <div style={{ marginTop: '12px', fontSize: '12px', color: '#666', lineHeight: '1.6' }}>
+          <strong>Use cases:</strong><br/>
+          • className - Control wrapper appearance (borders, shadows, layout)<br/>
+          • inputClassName - Control input text styling (font, color, alignment)<br/>
+          • style - Inline wrapper styles (width, padding, etc.)<br/>
+          • inputStyle - Inline input styles (text-transform, letter-spacing, etc.)
+        </div>
+      </div>
+
+      <style>{`
+        .custom-wrapper {
+          border: 2px dashed #5ba0e7 !important;
+          border-radius: 8px !important;
+          padding: 8px 12px !important;
+        }
+
+        .custom-input {
+          color: #4ea44b !important;
+          font-weight: bold !important;
+          font-size: 15px !important;
+        }
+
+        .wrapper-style {
+          background: rgba(118, 75, 162, 0.1) !important;
+          border: 2px solid #764ba2 !important;
+          border-radius: 12px !important;
+        }
+
+        .input-style {
+          background: rgba(235, 227, 97, 0.2) !important;
+          border-radius: 4px;
+          padding: 4px 8px;
+        }
+
+        .form-field-wrapper {
+          border: 1px solid #5ba0e7 !important;
+          box-shadow: 0 2px 4px rgba(91, 160, 231, 0.2) !important;
+        }
+
+        .form-field-input {
+          font-family: 'Courier New', monospace;
+        }
+      `}</style>
+    </div>
+  ),
+};

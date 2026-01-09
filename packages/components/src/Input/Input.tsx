@@ -50,6 +50,14 @@ export interface InputProps
    * Custom inline styles
    */
   style?: React.CSSProperties;
+  /**
+   * Custom input className
+   */
+  inputClassName?: string;
+  /**
+   * Custom input styles
+   */
+  inputStyle?: React.CSSProperties;
 }
 
 const InputContainer = styled.div<{
@@ -424,6 +432,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       clearIcon,
       className,
       style,
+      inputClassName,
+      inputStyle,
       onFocus,
       onBlur,
       value,
@@ -523,6 +533,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              className={inputClassName}
+              style={inputStyle}
               {...rest}
             />
             {clearButtonNode}
