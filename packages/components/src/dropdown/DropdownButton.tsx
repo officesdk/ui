@@ -86,6 +86,7 @@ const DropdownButtonContainer = styled.button<{
       padding: ${sizeConfig.padding};
       gap: ${sizeConfig.gap};
       font-size: ${sizeConfig.fontSize};
+      border-radius: ${sizeConfig.borderRadius};
     `;
   }}
 
@@ -101,7 +102,6 @@ const DropdownButtonContainer = styled.button<{
 
     // Border for framed variant
     let border = 'none';
-    const borderRadius = config.borderRadius || '4px';
 
     if ($variant === 'framed') {
       const borderColor = $error
@@ -116,7 +116,6 @@ const DropdownButtonContainer = styled.button<{
     return `
       background: ${background};
       border: ${border};
-      border-radius: ${borderRadius};
       color: ${color};
 
       &:hover:not(:disabled) {

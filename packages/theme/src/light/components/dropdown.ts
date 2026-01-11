@@ -55,6 +55,7 @@ export const dropdownButton: DropdownButtonConfig = {
       gap: '8px',
       iconSize: { width: '18px', height: '18px' },
       indicatorSize: { width: '18px', height: '18px' },
+      borderRadius: borderRadius.small,
     },
     medium: {
       padding: '4px 8px',
@@ -63,6 +64,7 @@ export const dropdownButton: DropdownButtonConfig = {
       gap: '8px',
       iconSize: { width: '18px', height: '18px' },
       indicatorSize: { width: '18px', height: '18px' },
+      borderRadius: borderRadius.small
     },
   },
 };
