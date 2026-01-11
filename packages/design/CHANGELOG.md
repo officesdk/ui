@@ -1,5 +1,12 @@
 # @officesdk/design
 
+## 0.1.15
+
+### Patch Changes
+
+- 987eed5: feat: add broderRadius to dropdownButton and fix type error
+- 8013c47: feat: Refactor init function
+
 ## 0.1.14
 
 ### Patch Changes
