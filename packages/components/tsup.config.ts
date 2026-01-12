@@ -7,6 +7,17 @@ export default defineConfig([
     outDir: 'dist/cjs',
     dts: {
       resolve: true,
+      compilerOptions: {
+        baseUrl: '.',
+        paths: {
+          '@officesdk/editor-sdk-core/shared': [
+            '../../node_modules/@officesdk/editor-sdk-core/types/shared.d.ts'
+          ],
+          '@officesdk/design/theme': ['../theme/src/index.ts'],
+          '@officesdk/design/utils': ['../utils/src/index.ts'],
+          '@officesdk/design/icons': ['../icons/src/index.ts'],
+        },
+      },
     },
     clean: true,
     sourcemap: true,
@@ -29,6 +40,17 @@ export default defineConfig([
     outDir: 'dist/esm',
     dts: {
       resolve: true,
+      compilerOptions: {
+        baseUrl: '.',
+        paths: {
+          '@officesdk/editor-sdk-core/shared': [
+            '../../node_modules/@officesdk/editor-sdk-core/types/shared.d.ts'
+          ],
+          '@officesdk/design/theme': ['../theme/src/index.ts'],
+          '@officesdk/design/utils': ['../utils/src/index.ts'],
+          '@officesdk/design/icons': ['../icons/src/index.ts'],
+        },
+      },
     },
     clean: false,
     sourcemap: true,
