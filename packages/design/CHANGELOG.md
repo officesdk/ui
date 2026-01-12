@@ -1,5 +1,13 @@
 # @officesdk/design
 
+## 0.1.22
+
+### Patch Changes
+
+- 5a23e24: - feat: adjust tooltip inner style and add some story
+  - refactor: refactor globalRenderFunction
+  - fix: fix checkbox hover style
+
 ## 0.1.21
 
 ### Patch Changes
