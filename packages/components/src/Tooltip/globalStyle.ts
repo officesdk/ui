@@ -34,9 +34,9 @@ export const TooltipGlobalStyles = createGlobalStyle`
   .od-tooltip-inner {
     padding: 6px 8px;
     text-align: left;
-    text-decoration: none;
-    word-wrap: break-word;
+    white-space: nowrap;
     min-height: unset;
+    text-align: center;
   }
 
   /* Tooltip arrow base */

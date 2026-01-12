@@ -223,29 +223,65 @@ export const WhiteLarge: Story = {
 };
 
 export const Placements: Story = {
-  render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', padding: '100px', width: '600px' }}>
-      <div />
-      <Tooltip content="Top placement" placement="top">
-        <Button style={{ width: '100%' }}>Top</Button>
-      </Tooltip>
-      <div />
+  render: () => {
+    const getContainer = (node: HTMLElement) => node.parentElement || document.body;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '60px', padding: '100px', alignItems: 'center' }}>
+        {/* Top placements */}
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Tooltip content="topLeft placement" placement="topLeft" getPopupContainer={getContainer}>
+            <Button>topLeft</Button>
+          </Tooltip>
+          <Tooltip content="top placement" placement="top" getPopupContainer={getContainer}>
+            <Button>top</Button>
+          </Tooltip>
+          <Tooltip content="topRight placement" placement="topRight" getPopupContainer={getContainer}>
+            <Button>topRight</Button>
+          </Tooltip>
+        </div>
 
-      <Tooltip content="Left placement" placement="left">
-        <Button style={{ width: '100%' }}>Left</Button>
-      </Tooltip>
-      <div />
-      <Tooltip content="Right placement" placement="right">
-        <Button style={{ width: '100%' }}>Right</Button>
-      </Tooltip>
+        {/* Left and Right placements */}
+        <div style={{ display: 'flex', gap: '200px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Tooltip content="leftTop placement" placement="leftTop" getPopupContainer={getContainer}>
+              <Button>leftTop</Button>
+            </Tooltip>
+            <Tooltip content="left placement" placement="left" getPopupContainer={getContainer}>
+              <Button>left</Button>
+            </Tooltip>
+            <Tooltip content="leftBottom placement" placement="leftBottom" getPopupContainer={getContainer}>
+              <Button>leftBottom</Button>
+            </Tooltip>
+          </div>
 
-      <div />
-      <Tooltip content="Bottom placement" placement="bottom">
-        <Button style={{ width: '100%' }}>Bottom</Button>
-      </Tooltip>
-      <div />
-    </div>
-  ),
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Tooltip content="rightTop placement" placement="rightTop" getPopupContainer={getContainer}>
+              <Button>rightTop</Button>
+            </Tooltip>
+            <Tooltip content="right placement" placement="right" getPopupContainer={getContainer}>
+              <Button>right</Button>
+            </Tooltip>
+            <Tooltip content="rightBottom placement" placement="rightBottom" getPopupContainer={getContainer}>
+              <Button>rightBottom</Button>
+            </Tooltip>
+          </div>
+        </div>
+
+        {/* Bottom placements */}
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Tooltip content="bottomLeft placement" placement="bottomLeft" getPopupContainer={getContainer}>
+            <Button>bottomLeft</Button>
+          </Tooltip>
+          <Tooltip content="bottom placement" placement="bottom" getPopupContainer={getContainer}>
+            <Button>bottom</Button>
+          </Tooltip>
+          <Tooltip content="bottomRight placement" placement="bottomRight" getPopupContainer={getContainer}>
+            <Button>bottomRight</Button>
+          </Tooltip>
+        </div>
+      </div>
+    );
+  },
 };
 
 export const Triggers: Story = {
@@ -264,6 +300,86 @@ export const Triggers: Story = {
       </Tooltip>
     </div>
   ),
+};
+
+export const EdgePositions: Story = {
+  render: () => {
+    const getContainer = (node: HTMLElement) => node.parentElement || document.body;
+    return (
+      <div style={{ width: '100vw', height: '100vh', position: 'relative', padding: '20px', boxSizing: 'border-box' }}>
+        <div style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)' }}>
+          <Tooltip
+            content="This tooltip is positioned at the right edge of the window to test boundary handling"
+            variant="black"
+            placement="right"
+            getPopupContainer={getContainer}
+          >
+            <Button>Right Edge</Button>
+          </Tooltip>
+        </div>
+
+        <div style={{ position: 'absolute', right: '20px', top: '120px' }}>
+          <Tooltip
+            content="Top right corner tooltip"
+            variant="black"
+            size="small"
+            placement="topRight"
+            getPopupContainer={getContainer}
+          >
+            <Button>Top Right</Button>
+          </Tooltip>
+        </div>
+
+        <div style={{ position: 'absolute', right: '20px', bottom: '20px' }}>
+          <Tooltip
+            content="Bottom right corner tooltip with long text to test boundary handling when content is wide"
+            variant="black"
+            placement="bottomRight"
+            getPopupContainer={getContainer}
+          >
+            <Button>Bottom Right</Button>
+          </Tooltip>
+        </div>
+
+        <div style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)' }}>
+          <Tooltip
+            content="This tooltip is positioned at the left edge of the window"
+            variant="black"
+            placement="left"
+            getPopupContainer={getContainer}
+          >
+            <Button>Left Edge</Button>
+          </Tooltip>
+        </div>
+
+        <div style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)' }}>
+          <Tooltip
+            content="Top edge tooltip"
+            variant="white"
+            size="small"
+            placement="top"
+            getPopupContainer={getContainer}
+          >
+            <Button>Top Edge</Button>
+          </Tooltip>
+        </div>
+
+        <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)' }}>
+          <Tooltip
+            content="Bottom edge tooltip"
+            variant="black"
+            placement="bottom"
+            getPopupContainer={getContainer}
+          >
+            <Button>Bottom Edge</Button>
+          </Tooltip>
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export const Playground: Story = {
