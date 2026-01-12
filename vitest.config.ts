@@ -31,10 +31,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@officesdk/design/theme': path.resolve(__dirname, './packages/theme/src/index.ts'),
+      '@officesdk/design/utils': path.resolve(__dirname, './packages/utils/src/index.ts'),
+      '@officesdk/design/icons': path.resolve(__dirname, './packages/icons/src/index.ts'),
       '@officesdk/design': path.resolve(__dirname, './packages/components/src'),
-      '@officesdk/design/theme': path.resolve(__dirname, './packages/theme/src'),
-      '@officesdk/design/icons': path.resolve(__dirname, './packages/icons/src'),
-      '@officesdk/design/utils': path.resolve(__dirname, './packages/utils/src'),
     },
   },
 });
