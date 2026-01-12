@@ -1,5 +1,11 @@
 # @officesdk/design
 
+## 0.1.17
+
+### Patch Changes
+
+- 62b550f: chore: Add sideEffects to make tree-shaking work
+
 ## 0.1.16
 
 ### Patch Changes
