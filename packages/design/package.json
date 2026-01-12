@@ -72,6 +72,7 @@
     "dist",
     "README.md"
   ],
+  "sideEffects": false,
   "dependencies": {
     "@officesdk/editor-sdk-core": "0.0.0-alpha.9",
     "rc-menu": "^9.0.0",
