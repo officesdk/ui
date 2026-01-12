@@ -31,27 +31,28 @@ pnpm add @officesdk/design
 
 ```tsx
 import React from 'react';
-import { Button, UIConfigProvider, createUIConfig } from '@officesdk/design';
+import { Button, initUIConfig } from '@officesdk/design';
 import { lightTheme } from '@officesdk/design/theme';
 import { iconRegistry } from '@officesdk/design/icons';
 
-const config = createUIConfig({
+// Initialize configuration before React app starts (e.g., in index.tsx)
+initUIConfig({
   theme: lightTheme,
   icons: iconRegistry,
 });
 
 function App() {
   return (
-    <UIConfigProvider config={config}>
-      <Button variant="solid" colorType="default">
-        Click Me
-      </Button>
-    </UIConfigProvider>
+    <Button variant="solid" colorType="default">
+      Click Me
+    </Button>
   );
 }
 
 export default App;
 ```
+
+> **Note**: `initUIConfig` is the recommended way to configure the UI library. It avoids Provider nesting and works in non-React environments. For per-component-tree configuration, you can still use `UIConfigProvider`.
 
 ## Documentation
 
@@ -70,7 +71,7 @@ Then visit http://localhost:6006
 ### Import Components and Configuration
 
 ```tsx
-import { Button, UIConfigProvider, createUIConfig } from '@officesdk/design';
+import { Button, initUIConfig } from '@officesdk/design';
 import { lightTheme } from '@officesdk/design/theme';
 import { iconRegistry } from '@officesdk/design/icons';
 ```
@@ -156,12 +157,12 @@ Utilities package providing common utility functions.
 ## Custom Configuration
 
 ```tsx
-import { UIConfigProvider, createUIConfig } from '@officesdk/design';
+import { initUIConfig } from '@officesdk/design';
 import { lightTheme } from '@officesdk/design/theme';
 import { iconRegistry } from '@officesdk/design/icons';
 
-// Create custom configuration
-const config = createUIConfig({
+// Initialize with custom configuration
+initUIConfig({
   theme: {
     ...lightTheme,
     colors: {
@@ -181,7 +182,7 @@ const config = createUIConfig({
 });
 
 function App() {
-  return <UIConfigProvider config={config}>{/* Your app */}</UIConfigProvider>;
+  return <div>{/* Your app */}</div>;
 }
 ```
 

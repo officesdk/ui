@@ -45,25 +45,26 @@ Note: This configuration is optional but recommended for optimal TypeScript Inte
 ### Usage
 
 ```tsx
-import { Button, UIConfigProvider, createUIConfig } from '@officesdk/design';
+import { Button, initUIConfig } from '@officesdk/design';
 import { lightTheme } from '@officesdk/design/theme';
 import { iconRegistry } from '@officesdk/design/icons';
 
-const config = createUIConfig({
+// Initialize configuration before React app starts (e.g., in index.tsx)
+initUIConfig({
   theme: lightTheme,
   icons: iconRegistry,
 });
 
 function App() {
   return (
-    <UIConfigProvider config={config}>
-      <Button variant="solid" colorType="default">
-        Click Me
-      </Button>
-    </UIConfigProvider>
+    <Button variant="solid" colorType="default">
+      Click Me
+    </Button>
   );
 }
 ```
+
+**Recommended**: Use `initUIConfig()` for simpler global configuration. It avoids Provider nesting and works even in non-React environments. For per-component-tree configuration, you can still use `UIConfigProvider`.
 
 ## Browse Components
 
