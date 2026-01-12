@@ -1,5 +1,11 @@
 # @officesdk/design
 
+## 0.1.19
+
+### Patch Changes
+
+- 9655101: feat: support loading for toast type
+
 ## 0.1.18
 
 ### Patch Changes
