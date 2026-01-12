@@ -1,5 +1,11 @@
 # @officesdk/design
 
+## 0.1.21
+
+### Patch Changes
+
+- ef997af: fix: fix theme import error
+
 ## 0.1.20
 
 ### Patch Changes
