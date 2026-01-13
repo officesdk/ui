@@ -1,5 +1,11 @@
 # @officesdk/design
 
+## 0.1.24
+
+### Patch Changes
+
+- 6808280: refactor: change theme init param type to DeepPartial
+
 ## 0.1.23
 
 ### Patch Changes
