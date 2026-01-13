@@ -116,12 +116,12 @@ const RadioOuter = styled.div<{
       : theme.components.radio.unchecked;
 
     return `
-      ${RadioContainer}:hover & {
+      :hover & {
         background: ${stateConfig.backgroundHover};
         border-color: ${stateConfig.borderColorHover};
       }
 
-      ${RadioContainer}:active & {
+      :active & {
         border-color: ${stateConfig.borderColorActive};
       }
     `;
