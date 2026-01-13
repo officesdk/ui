@@ -2638,6 +2638,7 @@ __metadata:
     "@officesdk/design-theme": "workspace:*"
     "@officesdk/design-utils": "workspace:*"
     "@officesdk/editor-sdk-core": "npm:0.0.0-alpha.9"
+    rc-dropdown: "npm:^4.2.1"
     rc-menu: "npm:^9.0.0"
     rc-tooltip: "npm:^6.0.0"
     rc-virtual-list: "npm:^3.0.0"
