@@ -1,5 +1,6 @@
 import { Theme } from '@officesdk/design/theme';
 import type { IconRegistry } from '../Icon/IconProvider';
+import { DeepPartial } from '../utils/type';
 
 export type ToastPosition =
   | 'top-right'
@@ -107,7 +108,7 @@ export interface UIConfig {
   /**
    * Theme configuration (required)
    */
-  theme: Theme; // Will be typed as Theme from @officesdk/design/theme
+  theme: DeepPartial<Theme>; // Will be typed as Theme from @officesdk/design/theme
   /**
    * Icon registry (optional)
    */

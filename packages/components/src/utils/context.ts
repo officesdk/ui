@@ -2,15 +2,16 @@ import type { Theme } from "@officesdk/design/theme";
 import type React from "react";
 import { lightTheme } from "@officesdk/design/theme";
 import { createDefaultRenderFunction } from "../UIConfigProvider/configManager";
+import { DeepPartial } from "./type";
 
-function deepMerge<T extends Record<string, unknown>>(target: T, ...sources: Partial<T>[]): T {
+function deepMerge<T extends object>(target: T, ...sources: Partial<T>[]): T {
   if (!sources.length) return target;
   const source = sources.shift();
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
       if (isObject(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: {} });
-        deepMerge(target[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
+        deepMerge(target[key] as object, source[key] as object);
       } else {
         Object.assign(target, { [key]: source[key] });
       }
@@ -19,13 +20,14 @@ function deepMerge<T extends Record<string, unknown>>(target: T, ...sources: Par
   return deepMerge(target, ...sources);
 }
 
-function isObject(item: any): item is Record<string, unknown> {
+function isObject(item: any): item is object {
   return item && typeof item === "object" && !Array.isArray(item);
 }
 
 
+
 const globalTheme: Theme = lightTheme;
-export const registerGlobalTheme = (theme: Theme) => {
+export const registerGlobalTheme = (theme: DeepPartial<Theme>) => {
   // Theme is a complex object type, cast to Record for deepMerge
   // Use double cast via unknown to satisfy TypeScript's type system
   deepMerge(
@@ -54,7 +56,7 @@ export const getGlobalRenderFunction = () => globalRenderFunction;
  * @param context.render - Optional render function for toast (React 18+ uses createRoot, older versions use ReactDOM.render)
  */
 export const registerGlobalContext = (context: {
-  theme: Theme;
+  theme: DeepPartial<Theme>;
   render?: (element: React.ReactElement, container: HTMLElement) => void;
 }) => {
   if (context.theme) {
