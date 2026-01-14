@@ -30,7 +30,7 @@ export const toolbarButton: ToolbarButtonConfig = {
     colorDisabled: colors.palettes.transparency['30'],
   },
   layout: {
-    padding: '0 1px',
+    padding: '0',
     height: '28px',
     content: {
       padding: '0 4px',

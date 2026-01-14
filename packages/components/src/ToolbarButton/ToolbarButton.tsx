@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '../utils/styled';
 
-export interface ToolbarButtonProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
+export interface ToolbarButtonProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick' | 'onDoubleClick'> {
   /**
    * Whether the button is disabled
    */
@@ -9,15 +9,17 @@ export interface ToolbarButtonProps extends Omit<React.HTMLAttributes<HTMLDivEle
   /**
    * Whether the button is in active state
    */
-  active?: boolean;
+  isActive?: boolean;
   /**
    * Icon to display
+   * - If string: image URL
+   * - If ReactNode: custom icon component
    */
-  icon?: React.ReactNode;
+  icon?: string | React.ReactNode;
   /**
-   * Label text
+   * Label text or custom node
    */
-  label?: string;
+  label?: string | React.ReactNode;
   /**
    * Whether to show dropdown arrow
    */
@@ -30,6 +32,10 @@ export interface ToolbarButtonProps extends Omit<React.HTMLAttributes<HTMLDivEle
    * Click handler for main button
    */
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Double click handler for main button
+   */
+  onDoubleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   /**
    * Click handler for dropdown section
    */
@@ -46,7 +52,7 @@ export interface ToolbarButtonProps extends Omit<React.HTMLAttributes<HTMLDivEle
 
 const ToolbarButtonContainer = styled.div<{
   $disabled: boolean;
-  $active: boolean;
+  $isActive: boolean;
 }>`
   display: inline-flex;
   align-items: center;
@@ -55,7 +61,7 @@ const ToolbarButtonContainer = styled.div<{
   transition: border-color 0.15s ease;
   box-sizing: border-box;
 
-  ${({ $disabled, $active, theme }) => {
+  ${({ $disabled, $isActive, theme }) => {
     const config = theme.components.toolbarButton;
 
     if ($disabled) {
@@ -63,7 +69,7 @@ const ToolbarButtonContainer = styled.div<{
         border-color: ${config.border.borderColorDisabled};
       `;
     }
-    if ($active) {
+    if ($isActive) {
       return `
         border-color: ${config.border.borderColorActive};
 
@@ -91,11 +97,19 @@ const ToolbarButtonContainer = styled.div<{
       }
     `;
   }}
+
+  ${({ theme }) => {
+    const config = theme.components.toolbarButton;
+    return `
+      height: ${config.layout.height};
+      padding: ${config.layout.padding};
+    `;
+  }}
 `;
 
 const MainButton = styled.button<{
   $disabled: boolean;
-  $active: boolean;
+  $isActive: boolean;
   $hasLabel: boolean;
 }>`
   display: flex;
@@ -104,17 +118,17 @@ const MainButton = styled.button<{
   border: none;
   cursor: pointer;
   outline: none;
+  height: 100%;
   transition: background-color 0.15s ease;
 
-  ${({ $hasLabel, theme }) => {
+  ${({ theme }) => {
     const config = theme.components.toolbarButton;
     return `
-      height: ${config.layout.height};
-      padding: ${$hasLabel ? config.layout.content.padding : config.layout.padding};
+      padding: ${config.layout.content.padding};
     `;
   }}
 
-  ${({ $disabled, $active, theme }) => {
+  ${({ $disabled, $isActive, theme }) => {
     const config = theme.components.toolbarButton;
 
     if ($disabled) {
@@ -123,7 +137,7 @@ const MainButton = styled.button<{
         background: ${config.background.backgroundDisabled};
       `;
     }
-    if ($active) {
+    if ($isActive) {
       return `
         background: ${config.background.backgroundActive};
       `;
@@ -156,15 +170,10 @@ const IconWrapper = styled.span<{ $disabled: boolean }>`
     `;
   }}
 
-  ${({ $disabled, theme }) => {
-    const config = theme.components.toolbarButton;
+  ${({ $disabled }) => {
     return $disabled
-      ? `
-    color: ${config.color.colorDisabled};
-  `
-      : `
-    color: ${config.color.color};
-  `;
+      ? `opacity: 0.3;`
+      : ``;
   }}
 
   svg, img {
@@ -202,7 +211,7 @@ const LabelText = styled.span<{ $disabled: boolean }>`
 
 const DropdownButton = styled.button<{
   $disabled: boolean;
-  $active: boolean;
+  $isActive: boolean;
   $split: boolean;
 }>`
   display: flex;
@@ -275,7 +284,7 @@ const DropdownArrow = styled.span<{ $disabled: boolean }>`
 
 const Divider = styled.div<{
   $disabled: boolean;
-  $active: boolean;
+  $isActive: boolean;
 }>`
   width: 1px;
   transition: background-color 0.15s ease;
@@ -287,7 +296,7 @@ const Divider = styled.div<{
     `;
   }}
 
-  ${({ $disabled, $active, theme }) => {
+  ${({ $disabled, $isActive, theme }) => {
     const config = theme.components.toolbarButton;
 
     if ($disabled) {
@@ -295,7 +304,7 @@ const Divider = styled.div<{
         background-color: ${config.border.borderColorDisabled};
       `;
     }
-    if ($active) {
+    if ($isActive) {
       return `
         background-color: ${config.border.borderColorActive};
       `;
@@ -322,12 +331,20 @@ const ArrowIcon = () => (
  * A toolbar button with optional icon, label, and dropdown functionality
  *
  * @example
- * // Icon only button
+ * // Icon component
  * <ToolbarButton icon={<Icon />} />
+ *
+ * @example
+ * // Icon from URL
+ * <ToolbarButton icon="https://example.com/icon.png" />
  *
  * @example
  * // Button with label and dropdown
  * <ToolbarButton icon={<Icon />} label="Format" hasDropdown />
+ *
+ * @example
+ * // Button with custom label node
+ * <ToolbarButton icon={<Icon />} label={<CustomLabel />} />
  *
  * @example
  * // Button with split dropdown
@@ -342,12 +359,13 @@ const ArrowIcon = () => (
  */
 export const ToolbarButton: React.FC<ToolbarButtonProps> = ({
   disabled = false,
-  active = false,
+  isActive = false,
   icon,
   label,
   hasDropdown = false,
   splitDropdown = false,
   onClick,
+  onDoubleClick,
   onDropdownClick,
   className,
   style,
@@ -357,10 +375,41 @@ export const ToolbarButton: React.FC<ToolbarButtonProps> = ({
     onClick?.(e);
   };
 
+  const handleMainDoubleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled) return;
+    onDoubleClick?.(e);
+  };
+
   const handleDropdownClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled) return;
     e.stopPropagation();
     onDropdownClick?.(e);
+  };
+
+  // Render icon based on type
+  const renderIcon = () => {
+    if (!icon) return null;
+
+    if (typeof icon === 'string') {
+      return (
+        <IconWrapper $disabled={disabled}>
+          <img src={icon} alt="icon" />
+        </IconWrapper>
+      );
+    }
+
+    return <IconWrapper $disabled={disabled}>{icon}</IconWrapper>;
+  };
+
+  // Render label based on type
+  const renderLabel = () => {
+    if (!label) return null;
+
+    if (typeof label === 'string') {
+      return <LabelText $disabled={disabled}>{label}</LabelText>;
+    }
+
+    return label;
   };
 
   // Single click area (no split dropdown)
@@ -370,17 +419,18 @@ export const ToolbarButton: React.FC<ToolbarButtonProps> = ({
         className={className}
         style={style}
         $disabled={disabled}
-        $active={active}
+        $isActive={isActive}
       >
         <MainButton
           $disabled={disabled}
-          $active={active}
+          $isActive={isActive}
           $hasLabel={!!label}
           onClick={handleMainClick}
+          onDoubleClick={handleMainDoubleClick}
           disabled={disabled}
         >
-          {icon && <IconWrapper $disabled={disabled}>{icon}</IconWrapper>}
-          {label && <LabelText $disabled={disabled}>{label}</LabelText>}
+          {renderIcon()}
+          {renderLabel()}
           <DropdownArrow $disabled={disabled}>
             <ArrowIcon />
           </DropdownArrow>
@@ -396,24 +446,25 @@ export const ToolbarButton: React.FC<ToolbarButtonProps> = ({
         className={className}
         style={style}
         $disabled={disabled}
-        $active={active}
+        $isActive={isActive}
       >
         <MainButton
           $disabled={disabled}
-          $active={active}
+          $isActive={isActive}
           $hasLabel={!!label}
           onClick={handleMainClick}
+          onDoubleClick={handleMainDoubleClick}
           disabled={disabled}
         >
-          {icon && <IconWrapper $disabled={disabled}>{icon}</IconWrapper>}
-          {label && <LabelText $disabled={disabled}>{label}</LabelText>}
+          {renderIcon()}
+          {renderLabel()}
         </MainButton>
 
-        <Divider $disabled={disabled} $active={active} />
+        <Divider $disabled={disabled} $isActive={isActive} />
 
         <DropdownButton
           $disabled={disabled}
-          $active={active}
+          $isActive={isActive}
           $split={true}
           onClick={handleDropdownClick}
           disabled={disabled}
@@ -432,17 +483,18 @@ export const ToolbarButton: React.FC<ToolbarButtonProps> = ({
       className={className}
       style={style}
       $disabled={disabled}
-      $active={active}
+      $isActive={isActive}
     >
       <MainButton
         $disabled={disabled}
-        $active={active}
+        $isActive={isActive}
         $hasLabel={!!label}
         onClick={handleMainClick}
+        onDoubleClick={handleMainDoubleClick}
         disabled={disabled}
       >
-        {icon && <IconWrapper $disabled={disabled}>{icon}</IconWrapper>}
-        {label && <LabelText $disabled={disabled}>{label}</LabelText>}
+        {renderIcon()}
+        {renderLabel()}
       </MainButton>
     </ToolbarButtonContainer>
   );

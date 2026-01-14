@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 import { ToolbarButton } from './ToolbarButton';
 
 const FormatPaintIcon = () => (
@@ -23,7 +24,7 @@ const meta: Meta<typeof ToolbarButton> = {
       control: 'boolean',
       description: 'Whether the button is disabled',
     },
-    active: {
+    isActive: {
       control: 'boolean',
       description: 'Whether the button is in active state',
     },
@@ -37,6 +38,9 @@ const meta: Meta<typeof ToolbarButton> = {
     },
     onClick: {
       action: 'clicked',
+    },
+    onDoubleClick: {
+      action: 'double clicked',
     },
     onDropdownClick: {
       action: 'dropdown clicked',
@@ -86,7 +90,7 @@ export const DoubleClickArea: Story = {
           label="Dropdown"
           hasDropdown
           splitDropdown
-          active
+          isActive
           onClick={args.onClick}
           onDropdownClick={args.onDropdownClick}
         />
@@ -132,7 +136,7 @@ export const SingleClickArea: Story = {
       </div>
       <div style={{ textAlign: 'center' }}>
         <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>Active</div>
-        <ToolbarButton icon={<FormatPaintIcon />} hasDropdown active onClick={args.onClick} />
+        <ToolbarButton icon={<FormatPaintIcon />} hasDropdown isActive onClick={args.onClick} />
       </div>
       <div style={{ textAlign: 'center' }}>
         <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>Click</div>
@@ -175,6 +179,141 @@ export const Playground: Story = {
     hasDropdown: true,
     splitDropdown: false,
     disabled: false,
-    active: false,
+    isActive: false,
+  },
+};
+
+export const StringIcon: Story = {
+  name: 'String Icon (Image URL)',
+  args: {
+    icon: 'https://cdn-icons-png.flaticon.com/512/25/25231.png',
+    label: 'Format',
+  },
+};
+
+export const StringLabel: Story = {
+  name: 'String Label',
+  args: {
+    icon: <FormatPaintIcon />,
+    label: 'Format',
+  },
+};
+
+export const CustomLabelNode: Story = {
+  name: 'Custom Label Node',
+  args: {
+    icon: <FormatPaintIcon />,
+    label: (
+      <span style={{ color: '#1890ff', fontWeight: 'bold' }}>
+        Custom
+      </span>
+    ),
+  },
+};
+
+export const StringIconAndLabel: Story = {
+  name: 'String Icon and Label',
+  args: {
+    icon: 'https://cdn-icons-png.flaticon.com/512/1159/1159633.png',
+    label: 'Edit',
+    hasDropdown: true,
+  },
+};
+
+export const WithInputLabel: Story = {
+  name: 'Label as Input Field',
+  render: () => {
+    const [value, setValue] = useState('12');
+
+    const inputElement = (
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        style={{
+          width: '40px',
+          height: '20px',
+          padding: '0 4px',
+          border: 'none',
+          outline: 'none',
+          background: 'transparent',
+          fontSize: '12px',
+          fontFamily: 'PingFang SC, sans-serif',
+          color: '#41464B',
+          textAlign: 'center',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          (e.target as HTMLInputElement).select();
+        }}
+      />
+    );
+
+    return (
+      <div style={{ display: 'flex', gap: '16px', padding: '20px', background: '#f9f9f9', alignItems: 'center' }}>
+        <div>
+          <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Font Size Selector</div>
+          <ToolbarButton
+            icon={<FormatPaintIcon />}
+            label={inputElement}
+            hasDropdown
+            splitDropdown
+            onDropdownClick={() => console.log('Dropdown clicked')}
+          />
+        </div>
+
+        <div>
+          <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>Input Only</div>
+          <ToolbarButton
+            label={inputElement}
+          />
+        </div>
+
+        <div>
+          <div style={{ marginBottom: '8px', fontSize: '12px', color: '#666' }}>With Suffix</div>
+          <ToolbarButton
+            label={
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                {inputElement}
+                <span style={{ fontSize: '12px', color: '#999' }}>px</span>
+              </div>
+            }
+            hasDropdown
+          />
+        </div>
+      </div>
+    );
+  },
+};
+
+export const WithDoubleClick: Story = {
+  name: 'With Double Click',
+  render: () => {
+    const [clickCount, setClickCount] = useState(0);
+    const [doubleClickCount, setDoubleClickCount] = useState(0);
+
+    return (
+      <div style={{ padding: '20px', background: '#f9f9f9' }}>
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+            Click or Double Click the Button
+          </div>
+          <ToolbarButton
+            icon={<FormatPaintIcon />}
+            label="Format"
+            onClick={() => setClickCount(prev => prev + 1)}
+            onDoubleClick={() => setDoubleClickCount(prev => prev + 1)}
+          />
+        </div>
+
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          <div>Single Clicks: {clickCount}</div>
+          <div>Double Clicks: {doubleClickCount}</div>
+          <div style={{ marginTop: '8px', fontSize: '12px', color: '#999' }}>
+            Note: Double click will also trigger single click events
+          </div>
+        </div>
+      </div>
+    );
   },
 };
