@@ -78,6 +78,7 @@
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
     "lint-staged": "^16.2.7",
+    "rc-dialog": "^10.0.0",
     "rc-dropdown": "^4.2.1",
     "rc-menu": "^9.16.1",
     "rc-virtual-list": "^3.19.2",

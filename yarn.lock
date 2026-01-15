@@ -3408,7 +3408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rc-component/portal@npm:^1.1.0":
+"@rc-component/portal@npm:^1.0.0-8, @rc-component/portal@npm:^1.1.0":
   version: 1.1.2
   resolution: "@rc-component/portal@npm:1.1.2"
   dependencies:
@@ -10580,6 +10580,7 @@ __metadata:
     husky: "npm:^9.1.7"
     jsdom: "npm:^27.4.0"
     lint-staged: "npm:^16.2.7"
+    rc-dialog: "npm:^10.0.0"
     rc-dropdown: "npm:^4.2.1"
     rc-menu: "npm:^9.16.1"
     rc-virtual-list: "npm:^3.19.2"
@@ -11299,6 +11300,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rc-dialog@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "rc-dialog@npm:10.0.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.10.1"
+    "@rc-component/portal": "npm:^1.0.0-8"
+    classnames: "npm:^2.2.6"
+    rc-motion: "npm:^2.3.0"
+    rc-util: "npm:^5.21.0"
+  peerDependencies:
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: 10c0/a725fdd83ad101a8d06b5b426cf12fdddface3f7407195b6be0e416279df11593f748a799f8eb8945b2d319034abcd230dc35560de7050f4b1a6fa0148361846
+  languageName: node
+  linkType: hard
+
 "rc-dropdown@npm:^4.2.1":
   version: 4.2.1
   resolution: "rc-dropdown@npm:4.2.1"
@@ -11331,7 +11348,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-motion@npm:^2.0.0, rc-motion@npm:^2.4.3":
+"rc-motion@npm:^2.0.0, rc-motion@npm:^2.3.0, rc-motion@npm:^2.4.3":
   version: 2.9.5
   resolution: "rc-motion@npm:2.9.5"
   dependencies:
@@ -11390,7 +11407,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-util@npm:^5.24.4, rc-util@npm:^5.27.0, rc-util@npm:^5.36.0, rc-util@npm:^5.37.0, rc-util@npm:^5.44.0, rc-util@npm:^5.44.1, rc-util@npm:^5.44.3":
+"rc-util@npm:^5.21.0, rc-util@npm:^5.24.4, rc-util@npm:^5.27.0, rc-util@npm:^5.36.0, rc-util@npm:^5.37.0, rc-util@npm:^5.44.0, rc-util@npm:^5.44.1, rc-util@npm:^5.44.3":
   version: 5.44.4
   resolution: "rc-util@npm:5.44.4"
   dependencies:
