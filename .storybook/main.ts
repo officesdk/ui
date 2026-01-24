@@ -30,10 +30,12 @@ const config: StorybookConfig = {
       base: process.env.NODE_ENV === 'production' ? '/officesdk-design/' : '/',
       resolve: {
         preserveSymlinks: true,
+        dedupe: ['react', 'react-dom', 'styled-components'],
         alias: {
           'styled-components': path.resolve(currentDir, '../node_modules/styled-components'),
           react: path.resolve(currentDir, '../node_modules/react'),
           'react-dom': path.resolve(currentDir, '../node_modules/react-dom'),
+          'react/jsx-runtime': path.resolve(currentDir, '../node_modules/react/jsx-runtime'),
           // Resolve workspace packages to their source files for Storybook
           '@officesdk/design/theme': path.resolve(currentDir, '../packages/theme/src/index.ts'),
           '@officesdk/design/utils': path.resolve(currentDir, '../packages/utils/src/index.ts'),
