@@ -1,6 +1,6 @@
 {
   "name": "@officesdk/design",
-  "version": "0.1.27",
+  "version": "0.1.29",
   "description": "OfficeSdk SDK Design Component Library",
   "license": "MIT",
   "author": "OfficeSdk Team",
@@ -76,7 +76,7 @@
     "**/*.css"
   ],
   "dependencies": {
-    "@officesdk/editor-sdk-core": "0.0.0-alpha.13",
+    "@officesdk/editor-sdk-core": "0.0.0-alpha.14",
     "rc-dialog": "^10.0.0",
     "rc-dropdown": "^4.2.1",
     "rc-menu": "^9.0.0",
