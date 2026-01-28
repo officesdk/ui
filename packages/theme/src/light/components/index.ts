@@ -13,6 +13,7 @@ import { toolbarButton } from './toolbarButton';
 import { menu } from './menu';
 import { dropdownButton, dropdown } from './dropdown';
 import { modal } from './modal';
+import { loading } from './loading';
 
 export {
   button,
@@ -31,7 +32,11 @@ export {
   tooltip,
   toolbarButton,
   modal,
+  loading,
 };
+
+export type { LoadingConfig, LoadingSizeConfig, LoadingWrapperConfig, LoadingFullscreenConfig } from './loading';
+export type { ModalConfig, ModalBaseConfig, ModalVariantSize } from './modal';
 
 export const components = {
   toast,
@@ -50,4 +55,5 @@ export const components = {
   menu,
   dropdownButton,
   modal,
+  loading,
 };
