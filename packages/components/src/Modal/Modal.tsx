@@ -3,9 +3,14 @@ import RcDialog from 'rc-dialog';
 import type { DialogProps } from 'rc-dialog';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
+import { CloseIcon } from '@officesdk/design/icons';
 import { ModalGlobalStyles } from './globalStyle';
 import { styleManager } from '../utils/styleManager';
 import { getGlobalTheme } from '../utils/context';
+import { registerComponentIcons } from '../UIConfigProvider/configManager';
+
+// Auto-register icons required by Modal into the global registry
+registerComponentIcons({ close: CloseIcon });
 
 export interface ModalProps extends DialogProps {
   /**

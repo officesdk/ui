@@ -8,6 +8,8 @@ export {
   getUIConfig,
   getGlobalIconRegistry,
   getGlobalToastConfig,
+  registerComponentIcons,
+  getComponentIconRegistry,
 } from './configManager';
 
 export type {

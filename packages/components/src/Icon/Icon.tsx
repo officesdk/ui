@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '../utils/styled';
 import { useIconRegistry } from './IconProvider';
-import { getGlobalIconRegistry } from '../UIConfigProvider/configManager';
+import { getGlobalIconRegistry, getComponentIconRegistry } from '../UIConfigProvider/configManager';
 
 export interface IconSize {
   width: string;
@@ -22,11 +22,13 @@ export interface IconProps {
    */
   children?: React.ReactNode;
   /**
-   * Size of the icon (px or custom width/height)
+   * Size of the icon (px or custom width/height).
+   * When not provided, the SVG keeps its original width/height attributes.
    */
   size?: number | string | IconSize;
   /**
-   * Color of the icon (only works with SVG icons, not image src)
+   * Color of the icon (only works with SVG icons, not image src).
+   * When not provided, the SVG keeps its original colors.
    */
   color?: string;
   /**
@@ -58,21 +60,20 @@ const getSizeValue = (size: number | string | IconSize, dimension: 'width' | 'he
 };
 
 const IconContainer = styled.span<{
-  $size: number | string | IconSize;
-  $color: string;
+  $size?: number | string | IconSize;
+  $color?: string;
 }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: ${({ $size }) => getSizeValue($size, 'width')};
-  height: ${({ $size }) => getSizeValue($size, 'height')};
-  color: ${({ $color }) => $color};
+  ${({ $size }) => $size !== undefined && `width: ${getSizeValue($size, 'width')};`}
+  ${({ $size }) => $size !== undefined && `height: ${getSizeValue($size, 'height')};`}
+  ${({ $color }) => $color !== undefined && `color: ${$color};`}
   flex-shrink: 0;
   line-height: 1;
 
   svg {
-    width: 100%;
-    height: 100%;
+    ${({ $size }) => $size !== undefined && `width: 100%; height: 100%;`}
     display: block;
   }
 `;
@@ -103,8 +104,8 @@ export const Icon: React.FC<IconProps> = ({
   name,
   src,
   children,
-  size = 16,
-  color = 'currentColor',
+  size,
+  color,
   alt = 'icon',
   className,
   style,
@@ -112,6 +113,7 @@ export const Icon: React.FC<IconProps> = ({
 }) => {
   const contextRegistry = useIconRegistry();
   const globalRegistry = getGlobalIconRegistry();
+  const componentRegistry = getComponentIconRegistry();
   // Use context registry first, fallback to global registry
   const registry = contextRegistry || globalRegistry;
 
@@ -129,9 +131,9 @@ export const Icon: React.FC<IconProps> = ({
     );
   }
 
-  // If no children and no src, try registry
-  if (!iconElement && name && registry) {
-    const IconComponent = registry[name];
+  // If no children and no src, try registry (user's registry first, then component fallback)
+  if (!iconElement && name) {
+    const IconComponent = registry?.[name] ?? componentRegistry[name];
     if (IconComponent) {
       iconElement = <IconComponent />;
     } else if (process.env.NODE_ENV !== 'production') {

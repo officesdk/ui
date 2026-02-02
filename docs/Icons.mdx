@@ -1,0 +1,256 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Documentation/Icons" />
+
+# Icons
+
+Officesdk Design provides a comprehensive icon library with 66 icons organized into 8 categories. All icons are SVG-based React components that preserve their original dimensions and colors while allowing easy customization.
+
+## Installation
+
+Icons are included in the main `@officesdk/design` package:
+
+```bash
+yarn add @officesdk/design
+```
+
+## Usage
+
+### Direct Import
+
+Import and use icon components directly:
+
+```tsx
+import { CheckIcon, CloseIcon, SearchIcon } from '@officesdk/design/icons';
+
+function MyComponent() {
+  return (
+    <div>
+      <CheckIcon />
+      <CloseIcon />
+      <SearchIcon />
+    </div>
+  );
+}
+```
+
+### With Icon Component
+
+Use the `Icon` component for more control over size and color:
+
+```tsx
+import { Icon } from '@officesdk/design';
+import { CheckIcon } from '@officesdk/design/icons';
+
+// Default: preserves original SVG size and color
+<Icon><CheckIcon /></Icon>
+
+// Override size and color
+<Icon size={24} color="#5BA0E7">
+  <CheckIcon />
+</Icon>
+```
+
+### With Icon Registry
+
+Use the icon registry for dynamic icon rendering by name:
+
+```tsx
+import { Icon, IconProvider } from '@officesdk/design';
+import { iconRegistry } from '@officesdk/design/icons';
+
+function App() {
+  return (
+    <IconProvider icons={iconRegistry}>
+      <Icon name="check" size={20} />
+      <Icon name="close" size={20} color="#E95555" />
+    </IconProvider>
+  );
+}
+```
+
+### With initUIConfig (Recommended)
+
+Configure icons globally without Provider nesting:
+
+```tsx
+import { initUIConfig, Icon } from '@officesdk/design';
+import { lightTheme } from '@officesdk/design/theme';
+import { iconRegistry } from '@officesdk/design/icons';
+
+// Initialize before React app starts
+initUIConfig({
+  theme: lightTheme,
+  icons: iconRegistry,
+});
+
+// Now use Icon component anywhere
+function MyComponent() {
+  return <Icon name="check" size={20} />;
+}
+```
+
+### Tree-Shaking with createIconRegistry
+
+For optimal bundle size, use `createIconRegistry` to build a custom registry with only the icons you need:
+
+```tsx
+import { Icon, IconProvider } from '@officesdk/design';
+import {
+  createIconRegistry,
+  CheckIcon,
+  CloseIcon,
+  SearchIcon,
+} from '@officesdk/design/icons';
+
+// Only these 3 icons will be bundled (~1.5KB instead of ~32KB)
+const myIcons = createIconRegistry({
+  check: CheckIcon,
+  close: CloseIcon,
+  search: SearchIcon,
+});
+
+function App() {
+  return (
+    <IconProvider icons={myIcons}>
+      <Icon name="check" size={20} />
+      <Icon name="close" size={20} />
+    </IconProvider>
+  );
+}
+```
+
+**When to use each approach:**
+
+| Approach | Bundle Size | Use Case |
+|----------|-------------|----------|
+| Direct import (`<CheckIcon />`) | Smallest | One-off icons, no name prop needed |
+| `createIconRegistry` | Small | Name prop needed, bundle size critical |
+| `iconRegistry` | Largest (~32KB) | Prototyping, dynamic icon names |
+
+## Icon Categories
+
+### General Icons (18)
+Basic UI icons for common actions.
+
+`check` `close` `copy` `cut` `delete` `paste` `plus` `minus` `search` `save` `print` `undo` `redo` `hide` `select-all` `clear-format` `format-brush` `workbench`
+
+### Main Site Icons (11)
+Icons for main navigation and site features.
+
+`back` `menu` `settings` `filter` `sort` `list` `grid` `edit` `share` `download` `upload`
+
+### Text Icons (13)
+Text formatting and editing icons.
+
+`bold` `italic` `underline` `strikethrough` `align-left` `align-center` `align-right` `align-justify` `indent-increase` `indent-decrease` `list-bullet` `list-number` `link`
+
+### Arrows Icons (6)
+Directional and navigation icons.
+
+`arrow-up` `arrow-down` `arrow-left` `arrow-right` `chevron-up` `chevron-down`
+
+### Image Icons (5)
+Image manipulation icons.
+
+`image` `rotate-left` `rotate-right` `flip-horizontal` `flip-vertical`
+
+### Table Icons (4)
+Table editing icons.
+
+`table` `freeze` `merge-cells` `split-cells`
+
+### Utility Icons (4)
+Utility and control icons.
+
+`more` `refresh` `fullscreen` `exit-fullscreen`
+
+### Status Icons (5)
+Status indicator icons.
+
+`success` `error` `warning` `info` `loading`
+
+## API Reference
+
+### Icon Component Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Icon name from registry (requires IconProvider or initUIConfig) |
+| `src` | `string` | - | External image URL |
+| `children` | `ReactNode` | - | Custom icon element (highest priority) |
+| `size` | `number` or `string` or `IconSize` | - | Size in pixels or preset ('small', 'medium', 'large') |
+| `color` | `string` | - | Color override (SVG only, CSS color value) |
+| `alt` | `string` | - | Alt text for images |
+| `className` | `string` | - | Additional CSS class |
+| `style` | `CSSProperties` | - | Inline styles |
+| `onClick` | `function` | - | Click handler |
+
+### IconSize Presets
+
+| Size | Value |
+|------|-------|
+| `small` | 16px |
+| `medium` | 20px |
+| `large` | 24px |
+
+## Type Exports
+
+```tsx
+import type {
+  // All icon names
+  IconName,
+  // Category-specific names
+  ArrowsIconName,
+  GeneralIconName,
+  ImageIconName,
+  MainSiteIconName,
+  StatusIconName,
+  TableIconName,
+  TextIconName,
+  UtilityIconName,
+  // Component types
+  IconComponent,
+  IconRegistry,
+} from '@officesdk/design/icons';
+```
+
+## Category Arrays
+
+Access icon names by category:
+
+```tsx
+import {
+  ARROWS_ICONS,
+  GENERAL_ICONS,
+  IMAGE_ICONS,
+  MAIN_SITE_ICONS,
+  STATUS_ICONS,
+  TABLE_ICONS,
+  TEXT_ICONS,
+  UTILITY_ICONS,
+} from '@officesdk/design/icons';
+
+// Example: ['arrow-down', 'arrow-left', 'arrow-right', ...]
+console.log(ARROWS_ICONS);
+```
+
+## Best Practices
+
+1. **Use semantic icon names** - Choose icons that clearly represent the action or state
+2. **Consistent sizing** - Use size presets or consistent pixel values across your app
+3. **Color inheritance** - Icons inherit `currentColor` by default, making them theme-aware
+4. **Accessibility** - Add `aria-label` or pair with text for screen readers
+
+```tsx
+// Good: Icon with accessible label
+<button aria-label="Close dialog">
+  <Icon name="close" size={20} />
+</button>
+
+// Good: Icon with visible text
+<button>
+  <Icon name="save" size={16} />
+  <span>Save</span>
+</button>
+```
