@@ -4,7 +4,7 @@ import { Meta } from '@storybook/blocks';
 
 # Icons
 
-Officesdk Design provides a comprehensive icon library with 66 icons organized into 8 categories. All icons are SVG-based React components that preserve their original dimensions and colors while allowing easy customization.
+Officesdk Design provides a comprehensive icon library with 67 icons organized into 8 categories. All icons are SVG-based React components that preserve their original dimensions and colors while allowing easy customization through the `color` prop.
 
 ## Installation
 
@@ -49,6 +49,28 @@ import { CheckIcon } from '@officesdk/design/icons';
 <Icon size={24} color="#5BA0E7">
   <CheckIcon />
 </Icon>
+```
+
+### Color Override
+
+Icons support the `color` prop to override their default colors. This works for:
+
+- **Stroke-based icons** (using `currentColor`): Color is inherited automatically
+- **Fill-based icons** (hardcoded colors like status icons): Color prop overrides the fill
+
+```tsx
+import { Icon, IconProvider } from '@officesdk/design';
+import { allIconRegistry } from '@officesdk/design/icons';
+
+<IconProvider icons={allIconRegistry}>
+  {/* Status icons keep original colors by default */}
+  <Icon name="success" size={24} />  {/* Green */}
+  <Icon name="error" size={24} />    {/* Red */}
+
+  {/* Override with custom color */}
+  <Icon name="success" size={24} color="#8B5CF6" />  {/* Purple */}
+  <Icon name="error" size={24} color="#8B5CF6" />    {/* Purple */}
+</IconProvider>
 ```
 
 ### With Icon Registry
@@ -165,10 +187,10 @@ Utility and control icons.
 
 `more` `refresh` `fullscreen` `exit-fullscreen`
 
-### Status Icons (5)
+### Status Icons (6)
 Status indicator icons.
 
-`success` `error` `warning` `info` `loading`
+`success` `error` `warning` `info` `question` `loading`
 
 ## API Reference
 
@@ -180,7 +202,7 @@ Status indicator icons.
 | `src` | `string` | - | External image URL |
 | `children` | `ReactNode` | - | Custom icon element (highest priority) |
 | `size` | `number` or `string` or `IconSize` | - | Size in pixels or preset ('small', 'medium', 'large') |
-| `color` | `string` | - | Color override (SVG only, CSS color value) |
+| `color` | `string` | - | Color override (CSS color value) |
 | `alt` | `string` | - | Alt text for images |
 | `className` | `string` | - | Additional CSS class |
 | `style` | `CSSProperties` | - | Inline styles |

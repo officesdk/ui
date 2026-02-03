@@ -9,6 +9,10 @@
  * - index.ts: Updates category exports
  * - Icon.stories.tsx: Updates category imports and renders
  *
+ * It also normalizes SVG files (all categories):
+ * - Merges fill-opacity into fill using RGBA format
+ * - Wraps hardcoded fill colors in CSS variables (except white/currentColor/none)
+ *
  * Note: registry.ts iconRegistry is manually maintained and contains only internal component icons.
  */
 import * as fs from 'fs';
@@ -30,6 +34,98 @@ interface IconInfo {
   componentName: string; // PascalCase component name (e.g., 'ArrowDownIcon')
   category: string; // category folder name (e.g., 'arrows')
   svgPath: string; // relative path to SVG file (e.g., './svg/arrows/arrow-down.svg')
+}
+
+/**
+ * Colors that should NOT be converted to CSS variables (inner elements like checkmarks)
+ */
+const PRESERVED_COLORS = ['white', '#fff', '#ffffff', '#FFF', '#FFFFFF'];
+
+/**
+ * Convert hex color to RGB values
+ */
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+/**
+ * SVG normalization (applies to ALL icons)
+ * - Merges fill-opacity into fill using RGBA
+ * - Wraps hardcoded fill colors (not none/currentColor/white) in CSS variables
+ */
+function normalizeSvg(content: string): string {
+  let result = content;
+
+  // Step 1: Merge fill-opacity into fill using RGBA
+  // Pattern: fill="<color>" fill-opacity="<value>"
+  const fillOpacityPattern = /fill="(#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3})"\s+fill-opacity="([0-9.]+)"/g;
+  result = result.replace(fillOpacityPattern, (_match, color, opacity) => {
+    const rgb = hexToRgb(color);
+    if (rgb) {
+      return `fill="rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})"`;
+    }
+    return _match;
+  });
+
+  // Step 2: Wrap hardcoded hex fill colors in CSS variable
+  const hexFillPattern = /fill="(#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3})"(?!\s+fill-opacity)/g;
+  result = result.replace(hexFillPattern, (match, color) => {
+    if (PRESERVED_COLORS.includes(color.toLowerCase())) {
+      return match;
+    }
+    return `fill="var(--icon-fill, ${color})"`;
+  });
+
+  // Step 3: Wrap rgba fill colors in CSS variable
+  const rgbaFillPattern = /fill="(rgba\([^)]+\))"/g;
+  result = result.replace(rgbaFillPattern, (match, rgba) => {
+    if (match.includes('var(')) {
+      return match;
+    }
+    return `fill="var(--icon-fill, ${rgba})"`;
+  });
+
+  return result;
+}
+
+/**
+ * Normalize SVG files across all categories
+ */
+function normalizeSvgFiles(): void {
+  const categories = fs
+    .readdirSync(SVG_DIR, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name);
+
+  let totalNormalized = 0;
+
+  for (const category of categories) {
+    const categoryPath = path.join(SVG_DIR, category);
+    const files = fs.readdirSync(categoryPath).filter((file) => file.endsWith('.svg'));
+
+    for (const file of files) {
+      const filePath = path.join(categoryPath, file);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const normalizedContent = normalizeSvg(content);
+
+      if (content !== normalizedContent) {
+        fs.writeFileSync(filePath, normalizedContent, 'utf-8');
+        totalNormalized++;
+        console.log(`  Normalized: ${category}/${file}`);
+      }
+    }
+  }
+
+  if (totalNormalized > 0) {
+    console.log(`Normalized ${totalNormalized} SVG file(s)`);
+  }
 }
 
 /**
@@ -254,7 +350,9 @@ ${allTypeNames.map((t) => `  | ${t}`).join('\n')};
  * Update index.ts - update category exports
  */
 function updateIndexExports(categories: string[]): void {
-  const categoryConstNames = categories.map((cat) => cat.replace(/-/g, '_').toUpperCase() + '_ICONS');
+  const categoryConstNames = categories.map(
+    (cat) => cat.replace(/-/g, '_').toUpperCase() + '_ICONS'
+  );
   const categoryTypeNames = categories.map(
     (cat) =>
       cat
@@ -301,11 +399,13 @@ export type { ArrowsIconName as ArrowIconName } from './types.generated';
 function updateStorybook(categories: string[]): void {
   const existingContent = fs.readFileSync(STORYBOOK_FILE, 'utf-8');
 
-  const categoryConstNames = categories.map((cat) => cat.replace(/-/g, '_').toUpperCase() + '_ICONS');
+  const categoryConstNames = categories.map(
+    (cat) => cat.replace(/-/g, '_').toUpperCase() + '_ICONS'
+  );
 
   // Update imports from @officesdk/design/icons only
   // More specific pattern to match only the design/icons import block
-  const importPattern = /import \{\n(  [^\n]+\n)+\} from '@officesdk\/design\/icons';/;
+  const importPattern = /import \{\n( {2}2}[^\n]+\n)+\} from '@officesdk\/design\/icons';/;
   const newImports = `import {
   iconRegistry,
   createIconRegistry,
@@ -337,10 +437,7 @@ ${categoryConstNames.map((name) => `  ${name},`).join('\n')}
 
   const match = updatedContent.match(allIconsPattern);
   if (match) {
-    updatedContent = updatedContent.replace(
-      allIconsPattern,
-      `$1${newIconGrids}$3`
-    );
+    updatedContent = updatedContent.replace(allIconsPattern, `$1${newIconGrids}$3`);
   }
 
   fs.writeFileSync(STORYBOOK_FILE, updatedContent, 'utf-8');
@@ -349,6 +446,9 @@ ${categoryConstNames.map((name) => `  ${name},`).join('\n')}
 
 // Main
 function main() {
+  console.log('Normalizing SVG files...');
+  normalizeSvgFiles();
+
   console.log('Scanning SVG files...');
   const icons = scanIcons();
   const categories = [...new Set(icons.map((i) => i.category))].sort();

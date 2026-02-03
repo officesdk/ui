@@ -69,6 +69,7 @@ const IconContainer = styled.span<{
   ${({ $size }) => $size !== undefined && `width: ${getSizeValue($size, 'width')};`}
   ${({ $size }) => $size !== undefined && `height: ${getSizeValue($size, 'height')};`}
   ${({ $color }) => $color !== undefined && `color: ${$color};`}
+  ${({ $color }) => $color !== undefined && `--icon-fill: ${$color};`}
   flex-shrink: 0;
   line-height: 1;
 

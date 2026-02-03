@@ -24,7 +24,7 @@ import { iconRegistry } from '@officesdk/design/icons';
 
 Place your SVG file in the appropriate category folder under `src/svg/`:
 
-```
+```bash
 src/svg/
 ├── arrows/       # Directional icons (arrow-*, chevron-*)
 ├── general/      # Common actions (check, close, copy, delete, etc.)
@@ -41,23 +41,40 @@ src/svg/
 - Use `kebab-case` for filenames (e.g., `arrow-down.svg`, `align-center.svg`)
 - Use `currentColor` for stroke/fill to support color customization
 - Keep consistent viewBox dimensions (typically 16x16 or 20x20)
+- Use `fill="none"` on root `<svg>` element for stroke-based icons
+
+**Auto-normalization:**
+
+The `generate:registry` script automatically normalizes SVG files:
+
+| Original | Normalized | Purpose |
+|----------|------------|---------|
+| `fill="#52C41A"` | `fill="var(--icon-fill, #52C41A)"` | Enable color override via `color` prop |
+| `fill="#41464B" fill-opacity="0.3"` | `fill="var(--icon-fill, rgba(65, 70, 75, 0.3))"` | Merge opacity into RGBA |
+| `fill="none"` | *(preserved)* | Stroke-based icons |
+| `fill="currentColor"` | *(preserved)* | Standard color inheritance |
+| `fill="white"` / `#ffffff` | *(preserved)* | Inner elements (checkmarks, etc.) |
+
+This allows icons with hardcoded colors to support the `color` prop while preserving their default appearance.
 
 ### Step 2: Generate Registry
 
 Run the registry generator to update all related files:
 
 ```bash
-yarn generate:registry
+yarn workspace @officesdk/design-icons generate:registry
 ```
 
-This script automatically updates:
+This script automatically:
 
-- `src/icons.ts` - Icon component exports
-- `src/allIconRegistry.ts` - Complete registry for Storybook
-- `src/registry.ts` - Category arrays (ARROWS_ICONS, etc.)
-- `src/types.generated.ts` - TypeScript types
-- `src/index.ts` - Package exports
-- `Icon.stories.tsx` - Storybook imports and renders
+1. **Normalizes SVG files** - Applies the auto-normalization rules above
+2. **Updates generated files:**
+   - `src/icons.ts` - Icon component exports
+   - `src/allIconRegistry.ts` - Complete registry for Storybook
+   - `src/registry.ts` - Category arrays (ARROWS_ICONS, etc.)
+   - `src/types.generated.ts` - TypeScript types
+   - `src/index.ts` - Package exports
+   - `Icon.stories.tsx` - Storybook imports and renders
 
 ### Step 3: Build and Verify
 
@@ -68,7 +85,7 @@ yarn dev  # Check in Storybook
 
 ## Directory Structure
 
-```
+```bash
 packages/icons/
 ├── src/
 │   ├── svg/                    # SVG source files by category

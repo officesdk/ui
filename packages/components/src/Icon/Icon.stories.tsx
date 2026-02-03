@@ -146,6 +146,54 @@ export const DifferentColors: Story = {
   ),
 };
 
+// Status icons with color override
+export const StatusIconsColorOverride: Story = {
+  name: 'Status Icons Color Override',
+  render: () => (
+    <IconProvider icons={allIconRegistry}>
+      <div style={{ padding: '24px' }}>
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
+          Status Icons - Original Colors (no color prop)
+        </h3>
+        <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
+          {STATUS_ICONS.map((name) => (
+            <div key={name} style={{ textAlign: 'center' }}>
+              <Icon name={name} size={32} />
+              <div style={{ marginTop: '8px', fontSize: '11px', color: '#888' }}>{name}</div>
+            </div>
+          ))}
+        </div>
+
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
+          Status Icons - Custom Color Override
+        </h3>
+        <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
+          {STATUS_ICONS.map((name) => (
+            <div key={name} style={{ textAlign: 'center' }}>
+              <Icon name={name} size={32} color="#8B5CF6" />
+              <div style={{ marginTop: '8px', fontSize: '11px', color: '#888' }}>{name}</div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            padding: '12px',
+            background: '#f5f5f5',
+            borderRadius: '6px',
+            fontSize: '13px',
+            color: '#666',
+          }}
+        >
+          <strong>Note:</strong> When <code>color</code> prop is provided, it overrides the
+          hardcoded fill colors in the SVG while preserving white inner elements (checkmarks, etc.).
+        </div>
+      </div>
+    </IconProvider>
+  ),
+  parameters: { layout: 'fullscreen' },
+};
+
 // All icons showcase grouped by category
 export const AllIcons: Story = {
   render: () => (
