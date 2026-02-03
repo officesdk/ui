@@ -1,5 +1,14 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { styled } from '../utils/styled';
+import type { ValueMap, ValueMapExtended } from './valueMap';
+import {
+  extendValueMap,
+  createSinglePiecewiseMap,
+  valueToVisualPercentage,
+  visualPercentToValue,
+  snapToStep,
+  changeByStep,
+} from './valueMap';
 
 export interface SliderProps {
   /**
@@ -27,6 +36,15 @@ export interface SliderProps {
    */
   disabled?: boolean;
   /**
+   * Slider direction
+   */
+  direction?: 'horizontal' | 'vertical';
+  /**
+   * Value map for piecewise linear mapping (non-linear slider)
+   * When provided, min/max/step props are ignored
+   */
+  valueMap?: ValueMap;
+  /**
    * Callback when value changes
    */
   onChange?: (value: number) => void;
@@ -50,50 +68,88 @@ export interface SliderProps {
 
 const SliderContainer = styled.div<{
   $disabled: boolean;
+  $direction: 'horizontal' | 'vertical';
 }>`
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
-  height: 18px;
+  justify-content: center;
+  ${({ $direction }) =>
+    $direction === 'vertical'
+      ? `
+        width: 18px;
+        height: 100%;
+        flex: 1;
+        flex-direction: column;
+      `
+      : `
+        width: 100%;
+        height: 18px;
+        flex-direction: row;
+      `}
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   user-select: none;
 `;
 
 const SliderTrack = styled.div<{
   $disabled: boolean;
+  $direction: 'horizontal' | 'vertical';
 }>`
   position: absolute;
-  left: 0;
-  right: 0;
-  height: ${({ theme }) => theme.components.slider.track.height};
   background: ${({ theme }) => theme.colors.palettes.transparency['20']};
   border-radius: 1000px;
-  top: 50%;
-  transform: translateY(-50%);
+  ${({ $direction, theme }) =>
+    $direction === 'vertical'
+      ? `
+        top: 0;
+        bottom: 0;
+        width: ${theme.components.slider.track.height};
+        left: 50%;
+        transform: translateX(-50%);
+      `
+      : `
+        left: 0;
+        right: 0;
+        height: ${theme.components.slider.track.height};
+        top: 50%;
+        transform: translateY(-50%);
+      `}
 `;
 
 const SliderFill = styled.div<{
   $percentage: number;
   $disabled: boolean;
+  $direction: 'horizontal' | 'vertical';
 }>`
   position: absolute;
-  left: 0;
-  height: ${({ theme }) => theme.components.slider.track.height};
   border-radius: ${({ theme }) => theme.components.slider.track.borderRadius};
-  top: 50%;
-  transform: translateY(-50%);
-  width: ${({ $percentage }) => $percentage}%;
   background: ${({ $disabled, theme }) =>
     $disabled
       ? theme.components.slider.track.filledBackgroundDisabled
       : theme.components.slider.track.filledBackground};
+  ${({ $direction, $percentage, theme }) =>
+    $direction === 'vertical'
+      ? `
+        bottom: 0;
+        width: ${theme.components.slider.track.height};
+        left: 50%;
+        transform: translateX(-50%);
+        height: ${$percentage}%;
+      `
+      : `
+        left: 0;
+        height: ${theme.components.slider.track.height};
+        top: 50%;
+        transform: translateY(-50%);
+        width: ${$percentage}%;
+      `}
 `;
 
 const SliderThumb = styled.div<{
   $percentage: number;
   $disabled: boolean;
   $isDragging: boolean;
+  $direction: 'horizontal' | 'vertical';
 }>`
   position: absolute;
   width: ${({ theme }) => theme.components.slider.large.thumbSize};
@@ -101,12 +157,22 @@ const SliderThumb = styled.div<{
   border-radius: 50%;
   background: ${({ $disabled, theme }) =>
     $disabled ? theme.components.slider.thumb.backgroundDisabled : theme.components.slider.thumb.background};
-  left: ${({ $percentage }) => $percentage}%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'grab')};
-  transition: ${({ $isDragging }) => ($isDragging ? 'none' : 'left 0.1s ease')};
   box-shadow: ${({ theme }) => theme.components.slider.thumb.boxShadow};
+  ${({ $direction, $percentage, $isDragging }) =>
+    $direction === 'vertical'
+      ? `
+        bottom: ${$percentage}%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        transition: ${$isDragging ? 'none' : 'bottom 0.1s ease'};
+      `
+      : `
+        left: ${$percentage}%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: ${$isDragging ? 'none' : 'left 0.1s ease'};
+      `}
 
   ${({ $disabled, theme }) =>
     !$disabled &&
@@ -137,12 +203,26 @@ export const Slider: React.FC<SliderProps> = ({
   max = 100,
   step = 1,
   disabled = false,
+  direction = 'horizontal',
+  valueMap: valueMapProp,
   onChange,
   onDragStart,
   onDragEnd,
   className,
   style,
 }) => {
+  // Create extended value map
+  const extendedValueMap: ValueMapExtended = useMemo(() => {
+    if (valueMapProp) {
+      return extendValueMap(valueMapProp);
+    }
+    return extendValueMap(createSinglePiecewiseMap(min, max, step));
+  }, [valueMapProp, min, max, step]);
+
+  // Get effective min/max from value map
+  const effectiveMin = extendedValueMap.start;
+  const effectiveMax = extendedValueMap.end;
+
   const [internalValue, setInternalValue] = useState<number>(
     controlledValue ?? defaultValue
   );
@@ -151,43 +231,62 @@ export const Slider: React.FC<SliderProps> = ({
 
   const value = controlledValue !== undefined ? controlledValue : internalValue;
 
-  // Calculate percentage
-  const percentage = ((value - min) / (max - min)) * 100;
+  // Calculate percentage using value map
+  const percentage = valueToVisualPercentage(value, extendedValueMap) * 100;
 
   // Update value based on position
   const updateValue = useCallback(
-    (clientX: number) => {
+    (clientX: number, clientY: number) => {
       if (!containerRef.current || disabled) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      const offsetX = clientX - rect.left;
-      const newPercentage = Math.max(0, Math.min(100, (offsetX / rect.width) * 100));
-      const rawValue = (newPercentage / 100) * (max - min) + min;
+      let visualPercent: number;
 
-      // Apply step
-      const steppedValue = Math.round(rawValue / step) * step;
-      const clampedValue = Math.max(min, Math.min(max, steppedValue));
-
-      if (controlledValue === undefined) {
-        setInternalValue(clampedValue);
+      if (direction === 'vertical') {
+        // Vertical: from bottom (0%) to top (100%)
+        const offsetY = rect.bottom - clientY;
+        visualPercent = Math.max(0, Math.min(1, offsetY / rect.height));
+      } else {
+        // Horizontal: from left (0%) to right (100%)
+        const offsetX = clientX - rect.left;
+        visualPercent = Math.max(0, Math.min(1, offsetX / rect.width));
       }
 
-      onChange?.(clampedValue);
+      // Convert visual percent to value and snap to step
+      const rawValue = visualPercentToValue(visualPercent, extendedValueMap);
+      const snappedValue = snapToStep(rawValue, extendedValueMap);
+
+      if (controlledValue === undefined) {
+        setInternalValue(snappedValue);
+      }
+
+      onChange?.(snappedValue);
     },
-    [min, max, step, disabled, controlledValue, onChange]
+    [disabled, controlledValue, onChange, direction, extendedValueMap]
   );
 
-  // Handle mouse down
-  const handleMouseDown = useCallback(
+  // Handle track click (jump to position without dragging)
+  const handleTrackClick = useCallback(
     (e: React.MouseEvent) => {
       if (disabled) return;
 
       e.preventDefault();
+      updateValue(e.clientX, e.clientY);
+    },
+    [disabled, updateValue]
+  );
+
+  // Handle thumb drag start
+  const handleThumbMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (disabled) return;
+
+      e.preventDefault();
+      e.stopPropagation();
       setIsDragging(true);
       onDragStart?.();
-      updateValue(e.clientX);
     },
-    [disabled, onDragStart, updateValue]
+    [disabled, onDragStart]
   );
 
   // Handle mouse move
@@ -195,7 +294,7 @@ export const Slider: React.FC<SliderProps> = ({
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      updateValue(e.clientX);
+      updateValue(e.clientX, e.clientY);
     };
 
     const handleMouseUp = () => {
@@ -223,20 +322,20 @@ export const Slider: React.FC<SliderProps> = ({
         case 'ArrowLeft':
         case 'ArrowDown':
           e.preventDefault();
-          newValue = Math.max(min, value - step);
+          newValue = changeByStep(value, -1, extendedValueMap);
           break;
         case 'ArrowRight':
         case 'ArrowUp':
           e.preventDefault();
-          newValue = Math.min(max, value + step);
+          newValue = changeByStep(value, 1, extendedValueMap);
           break;
         case 'Home':
           e.preventDefault();
-          newValue = min;
+          newValue = effectiveMin;
           break;
         case 'End':
           e.preventDefault();
-          newValue = max;
+          newValue = effectiveMax;
           break;
         default:
           return;
@@ -248,30 +347,34 @@ export const Slider: React.FC<SliderProps> = ({
 
       onChange?.(newValue);
     },
-    [disabled, value, min, max, step, controlledValue, onChange]
+    [disabled, value, effectiveMin, effectiveMax, controlledValue, onChange, extendedValueMap]
   );
 
   return (
     <SliderContainer
       ref={containerRef}
       $disabled={disabled}
+      $direction={direction}
       className={className}
       style={style}
-      onMouseDown={handleMouseDown}
+      onMouseDown={handleTrackClick}
       onKeyDown={handleKeyDown}
       tabIndex={disabled ? -1 : 0}
       role="slider"
-      aria-valuemin={min}
-      aria-valuemax={max}
+      aria-valuemin={effectiveMin}
+      aria-valuemax={effectiveMax}
       aria-valuenow={value}
       aria-disabled={disabled}
+      aria-orientation={direction}
     >
-      <SliderTrack $disabled={disabled} />
-      <SliderFill $percentage={percentage} $disabled={disabled} />
+      <SliderTrack $disabled={disabled} $direction={direction} />
+      <SliderFill $percentage={percentage} $disabled={disabled} $direction={direction} />
       <SliderThumb
         $percentage={percentage}
         $disabled={disabled}
         $isDragging={isDragging}
+        $direction={direction}
+        onMouseDown={handleThumbMouseDown}
       />
     </SliderContainer>
   );
