@@ -22,7 +22,7 @@ export const tab: TabConfig = {
     },
     backgroundColor: 'transparent',
     layout: {
-      gap: '0',
+      gap: '32px',
     },
   },
   card: {
