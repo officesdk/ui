@@ -1,5 +1,11 @@
 # @officesdk/design
 
+## 0.2.4
+
+### Patch Changes
+
+- 89fb265: chore: update tab layout.gap config
+
 ## 0.2.3
 
 ### Patch Changes
