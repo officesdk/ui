@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NumberInput } from './NumberInput';
 import { UIConfigProvider, createUIConfig } from '../UIConfigProvider';
 import { lightTheme } from '../../../theme/src';
+import type { ValueMap } from '../Slider/valueMap';
 
 const meta: Meta<typeof NumberInput> = {
   title: 'Components/NumberInput',
@@ -76,6 +77,18 @@ const meta: Meta<typeof NumberInput> = {
       control: 'boolean',
       description: 'Whether to use thousands separator in display',
       table: { type: { summary: 'boolean' } },
+    },
+
+    // Focus and keyboard behavior
+    selectAllOnFocus: {
+      control: 'boolean',
+      description: 'Whether to select all text when the input receives focus',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    blurOnEscape: {
+      control: 'boolean',
+      description: 'Whether to blur the input when Escape key is pressed',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
 
     // Event callbacks
@@ -427,5 +440,115 @@ export const LocaleWithLargeNumber: Story = {
       </div>
     </div>
   ),
+};
+
+// ========== ValueMap (Non-linear Stepping) ==========
+
+const zoomValueMap: ValueMap = {
+  type: 'piecewise',
+  start: 10,
+  pieces: [
+    { size: 90, step: 5, visualSize: 50 },   // 10%-100%, step 5%
+    { size: 300, step: 25, visualSize: 50 },  // 100%-400%, step 25%
+  ],
+};
+
+/**
+ * NumberInput with valueMap for non-linear stepping.
+ * 10%-100%: step 5% | 100%-400%: step 25%
+ * When valueMap is provided, min/max/step props are ignored.
+ */
+export const WithValueMap: Story = {
+  render: () => {
+    const [value, setValue] = useState(100);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Zoom Input (10% - 400%)
+        </div>
+        <div style={{ fontSize: '12px', color: '#999' }}>
+          10%-100%: step 5% | 100%-400%: step 25%
+        </div>
+        <NumberInput
+          value={value}
+          valueMap={zoomValueMap}
+          unit="%"
+          size="large"
+          onChange={(fixedValue) => setValue(fixedValue ?? 10)}
+        />
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Current value: {value}%
+        </div>
+      </div>
+    );
+  },
+};
+
+const customPiecewiseMap: ValueMap = {
+  type: 'piecewise',
+  start: 0,
+  pieces: [
+    { size: 10, step: 1, visualSize: 30 },   // 0-10, step 1
+    { size: 40, step: 5, visualSize: 40 },   // 10-50, step 5
+    { size: 50, step: 10, visualSize: 30 },  // 50-100, step 10
+  ],
+};
+
+/**
+ * NumberInput with a three-segment piecewise valueMap.
+ * 0-10: step 1 | 10-50: step 5 | 50-100: step 10
+ * User-typed values are snapped to the nearest valid step on blur.
+ */
+export const WithPiecewiseValueMap: Story = {
+  render: () => {
+    const [value, setValue] = useState(25);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Piecewise Input (0 - 100)
+        </div>
+        <div style={{ fontSize: '12px', color: '#999' }}>
+          0-10: step 1 | 10-50: step 5 | 50-100: step 10
+        </div>
+        <NumberInput
+          value={value}
+          valueMap={customPiecewiseMap}
+          size="large"
+          onChange={(fixedValue) => setValue(fixedValue ?? 0)}
+        />
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Current value: {value}
+        </div>
+      </div>
+    );
+  },
+};
+
+// ========== Focus & Keyboard Behavior ==========
+
+/**
+ * When selectAllOnFocus is true, all text in the input is selected on focus.
+ * Click on the input to see the text get selected automatically.
+ */
+export const SelectAllOnFocus: Story = {
+  args: {
+    defaultValue: 12345,
+    size: 'large',
+    selectAllOnFocus: true,
+  },
+};
+
+/**
+ * When blurOnEscape is false, pressing Escape will NOT blur the input.
+ * By default (true), pressing Escape blurs the input just like Enter.
+ */
+export const NoBlurOnEscape: Story = {
+  args: {
+    defaultValue: 50,
+    size: 'large',
+    blurOnEscape: false,
+  },
 };
 
