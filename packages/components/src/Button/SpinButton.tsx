@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { styled } from '../utils/styled';
 import { Slider } from '../Slider';
 import { NumberInput, NumberInputProps } from '../NumberInput';
+import type { ValueMap } from '../Slider/valueMap';
 
 export interface SpinButtonProps {
   /**
@@ -53,6 +54,11 @@ export interface SpinButtonProps {
    */
   parser?: (displayValue: string) => number;
   /**
+   * Value map for piecewise linear mapping (non-linear stepping)
+   * When provided, min/max/step props are ignored in NumberInput and Slider
+   */
+  valueMap?: ValueMap;
+  /**
    * Callback when value changes
    */
   onChange?: (value: number | null) => void;
@@ -82,6 +88,7 @@ export interface SpinButtonProps {
       | 'precision'
       | 'formatter'
       | 'parser'
+      | 'valueMap'
       | 'onChange'
       | 'className'
       | 'style'
@@ -131,6 +138,7 @@ export const SpinButton: React.FC<SpinButtonProps> = ({
   precision,
   formatter,
   parser,
+  valueMap,
   onChange,
   className,
   style,
@@ -175,6 +183,7 @@ export const SpinButton: React.FC<SpinButtonProps> = ({
             max={max}
             step={step}
             disabled={disabled}
+            valueMap={valueMap}
             onChange={handleValueChange}
           />
         </SliderWrapper>
@@ -191,6 +200,7 @@ export const SpinButton: React.FC<SpinButtonProps> = ({
         precision={precision}
         formatter={formatter}
         parser={parser}
+        valueMap={valueMap}
         {...inputProps}
         onChange={handleValueChange}
       />

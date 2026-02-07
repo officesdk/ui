@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SpinButton } from './SpinButton';
 import { useState } from 'react';
+import type { ValueMap } from '../Slider/valueMap';
 
 const meta: Meta<typeof SpinButton> = {
   title: 'Components/SpinButton',
@@ -336,6 +337,84 @@ export const AllStatesShowcase: Story = {
   ),
   parameters: {
     layout: 'fullscreen',
+  },
+};
+
+// ========== ValueMap (Non-linear Stepping) ==========
+
+const zoomValueMap: ValueMap = {
+  type: 'piecewise',
+  start: 10,
+  pieces: [
+    { size: 90, step: 5, visualSize: 50 },   // 10%-100%, step 5%
+    { size: 300, step: 25, visualSize: 50 },  // 100%-400%, step 25%
+  ],
+};
+
+/**
+ * SpinButton with valueMap for non-linear stepping (without slider).
+ * The valueMap is passed through to NumberInput.
+ * 10%-100%: step 5% | 100%-400%: step 25%
+ */
+export const WithValueMap: Story = {
+  render: () => {
+    const [value, setValue] = useState(100);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Zoom SpinButton (10% - 400%)
+        </div>
+        <div style={{ fontSize: '12px', color: '#999' }}>
+          10%-100%: step 5% | 100%-400%: step 25%
+        </div>
+        <SpinButton
+          value={value}
+          valueMap={zoomValueMap}
+          size="small"
+          onChange={(val) => setValue(val ?? 10)}
+          inputProps={{ unit: '%' }}
+        />
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Current value: {value}%
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * SpinButton with valueMap and slider enabled.
+ * The valueMap is passed through to both Slider and NumberInput,
+ * keeping them in sync with non-linear stepping.
+ */
+export const WithValueMapAndSlider: Story = {
+  render: () => {
+    const [value, setValue] = useState(100);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Zoom SpinButton with Slider (10% - 400%)
+        </div>
+        <div style={{ fontSize: '12px', color: '#999' }}>
+          10%-100%: step 5% | 100%-400%: step 25%
+        </div>
+        <div style={{ width: '400px' }}>
+          <SpinButton
+            value={value}
+            valueMap={zoomValueMap}
+            showSlider
+            size="large"
+            onChange={(val) => setValue(val ?? 10)}
+            inputProps={{ unit: '%' }}
+          />
+        </div>
+        <div style={{ fontSize: '14px', color: '#666' }}>
+          Current value: {value}%
+        </div>
+      </div>
+    );
   },
 };
 

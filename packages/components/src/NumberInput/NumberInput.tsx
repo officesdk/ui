@@ -1,7 +1,9 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { styled } from '../utils/styled';
 import { useUIConfig } from '../UIConfigProvider';
 import { formatNumber, formatNumberForEdit, parseLocalizedNumber } from '../utils/numberLocale';
+import type { ValueMap, ValueMapExtended } from '../Slider/valueMap';
+import { extendValueMap, changeByStep, snapToStep } from '../Slider/valueMap';
 
 type LineType = 'outlined' | 'underlined' | 'borderless';
 
@@ -114,6 +116,11 @@ export interface NumberInputProps {
    */
   useThousandsSeparator?: boolean;
   /**
+   * Value map for piecewise linear mapping (non-linear stepping)
+   * When provided, min/max/step props are ignored
+   */
+  valueMap?: ValueMap;
+  /**
    * Callback when value changes
    * @param fixedValue - The clamped value within min/max range (can be undefined if empty)
    * @param rawValue - The original input value before clamping (can be undefined if empty)
@@ -142,6 +149,16 @@ export interface NumberInputProps {
    * @param parsedValue - The parsed number value (undefined if invalid)
    */
   onInputChange?: (inputValue: string, parsedValue: number | undefined) => void;
+  /**
+   * Whether to select all text when the input receives focus
+   * @default false
+   */
+  selectAllOnFocus?: boolean;
+  /**
+   * Whether to blur the input when Escape key is pressed
+   * @default true
+   */
+  blurOnEscape?: boolean;
 }
 
 const NumberInputContainer = styled.div<{
@@ -442,12 +459,15 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   showStepButtonsTrigger = 'normal',
   lineType = 'outlined',
   useThousandsSeparator = false,
+  valueMap: valueMapProp,
   onChange,
   className,
   style,
   onFocus: onFocusProp,
   onBlur: onBlurProp,
   onInputChange,
+  selectAllOnFocus = false,
+  blurOnEscape = true,
 }) => {
   const config = useUIConfig();
   const locale = config?.locale ?? 'en-US';
@@ -459,6 +479,16 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const value = controlledValue !== undefined ? controlledValue : internalValue;
+
+  // Create extended value map when valueMap is provided
+  const extendedValueMap: ValueMapExtended | undefined = useMemo(() => {
+    if (!valueMapProp) return undefined;
+    return extendValueMap(valueMapProp);
+  }, [valueMapProp]);
+
+  // Derive effective min/max from value map or props
+  const effectiveMin = extendedValueMap ? extendedValueMap.start : min;
+  const effectiveMax = extendedValueMap ? extendedValueMap.end : max;
 
   // Format value for display (optionally with thousands separator)
   const formatValue = useCallback(
@@ -530,9 +560,9 @@ export const NumberInput: React.FC<NumberInputProps> = ({
       if (val === undefined) {
         return undefined;
       }
-      return Math.max(min, Math.min(max, val));
+      return Math.max(effectiveMin, Math.min(effectiveMax, val));
     },
-    [min, max]
+    [effectiveMin, effectiveMax]
   );
 
   // Handle value change
@@ -553,27 +583,31 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   const increment = useCallback(() => {
     if (disabled) return;
     const currentValue = value ?? 0;
-    const newValue = precisionAdd(currentValue, step);
+    const newValue = extendedValueMap
+      ? changeByStep(currentValue, 1, extendedValueMap)
+      : precisionAdd(currentValue, step);
     handleValueChange(newValue);
     // If focused, sync displayValue immediately (use edit format without thousands separator)
     if (isFocused) {
       const clampedValue = clampValue(newValue);
       setDisplayValue(formatValueForEdit(clampedValue));
     }
-  }, [disabled, value, step, handleValueChange, isFocused, clampValue, formatValueForEdit]);
+  }, [disabled, value, step, handleValueChange, isFocused, clampValue, formatValueForEdit, extendedValueMap]);
 
   // Decrement value
   const decrement = useCallback(() => {
     if (disabled) return;
     const currentValue = value ?? 0;
-    const newValue = precisionSubtract(currentValue, step);
+    const newValue = extendedValueMap
+      ? changeByStep(currentValue, -1, extendedValueMap)
+      : precisionSubtract(currentValue, step);
     handleValueChange(newValue);
     // If focused, sync displayValue immediately (use edit format without thousands separator)
     if (isFocused) {
       const clampedValue = clampValue(newValue);
       setDisplayValue(formatValueForEdit(clampedValue));
     }
-  }, [disabled, value, step, handleValueChange, isFocused, clampValue, formatValueForEdit]);
+  }, [disabled, value, step, handleValueChange, isFocused, clampValue, formatValueForEdit, extendedValueMap]);
 
   // Handle input change
   const handleInputChange = useCallback(
@@ -602,14 +636,18 @@ export const NumberInput: React.FC<NumberInputProps> = ({
         if (parsed !== null) {
           // Apply precision to ensure stored value matches displayed value
           const preciseValue = applyPrecision(parsed);
-          handleValueChange(preciseValue);
+          // Snap to step when valueMap is provided
+          const finalValue = extendedValueMap && preciseValue !== undefined
+            ? snapToStep(preciseValue, extendedValueMap)
+            : preciseValue;
+          handleValueChange(finalValue);
         } else {
           setDisplayValue(formatValue(value));
         }
       }
       onBlurProp?.(e);
     },
-    [displayValue, parseValue, handleValueChange, value, formatValue, applyPrecision, onBlurProp]
+    [displayValue, parseValue, handleValueChange, value, formatValue, applyPrecision, onBlurProp, extendedValueMap]
   );
 
   // Handle input focus
@@ -618,9 +656,15 @@ export const NumberInput: React.FC<NumberInputProps> = ({
       setIsFocused(true);
       // Use edit format (without thousands separator) for easier editing
       setDisplayValue(formatValueForEdit(value));
+      if (selectAllOnFocus) {
+        // Use requestAnimationFrame to select after React updates the display value
+        requestAnimationFrame(() => {
+          inputRef.current?.select();
+        });
+      }
       onFocusProp?.(e);
     },
-    [value, formatValueForEdit, onFocusProp]
+    [value, formatValueForEdit, onFocusProp, selectAllOnFocus]
   );
 
   // Handle keyboard events
@@ -634,9 +678,11 @@ export const NumberInput: React.FC<NumberInputProps> = ({
         decrement();
       } else if (e.key === 'Enter') {
         inputRef.current?.blur();
+      } else if (e.key === 'Escape' && blurOnEscape) {
+        inputRef.current?.blur();
       }
     },
-    [increment, decrement]
+    [increment, decrement, blurOnEscape]
   );
 
   const handleMouseEnter = useCallback(() => {
